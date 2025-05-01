@@ -1,5 +1,7 @@
 package app.classeMorta.ClasseMorta.Logic.Voti;
 
+import app.classeMorta.ClasseMorta.Logic.Materie.Materie;
+import app.classeMorta.ClasseMorta.Logic.Studenti.Studenti;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -11,15 +13,29 @@ public class Voti {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long votoID;
 
-    @Column
-    private Long studenteID;
+    @ManyToOne
+    @JoinColumn(name = "id", nullable = false)
+    private Studenti studente;
 
+    @ManyToOne
+    @JoinColumn(name = "idMateria", nullable = false)
+    private Materie materia;
 
     @Column(nullable = false)
     private Float voto;
 
     @Column(nullable = false)
     private LocalDate data;
+
+    public void setVoto(Float voto){this.voto = voto;}
+    public void setStudente(Studenti studente){this.studente = studente;}
+    public void setMateria(Materie materia){this.materia = materia;}
+    public void setData(LocalDate data){this.data = data;}
+
+    public Float getVoto(){return voto;}
+    public Studenti getStudente(){return studente;}
+    public Materie getMateria(){return materia;}
+    public LocalDate getData(){return data;}
 
 
 

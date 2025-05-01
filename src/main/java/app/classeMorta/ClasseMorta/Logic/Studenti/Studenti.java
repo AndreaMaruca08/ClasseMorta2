@@ -13,15 +13,25 @@ public class Studenti {
     private String name;
 
     @Column(nullable = false, unique = true)
-    private char[] email;
+    private String email;
+    @Column(nullable = false, unique = true)
+    private char[] password;
 
+    public Studenti(){}
+    public Studenti(String name, String email, char[] password){
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
     //getter e setter
 
     public Long getId(){return id;}
     public String getName(){return name;}
-    public char[] getEmail(){return email;}
+    public String getEmail(){return email;}
+    public char[] getPassword(){return password;}
 
     public void setName(String name){this.name = name;}
-    public void setEmail(char[] email){this.email = email;}
+    public void setEmail(String email){this.email = email;}
+    public void setPassword(char[] password){this.password = password;}
 
 }

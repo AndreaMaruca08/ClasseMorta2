@@ -16,6 +16,9 @@ java {
 repositories {
 	mavenCentral()
 }
+bootRun {
+	mainClass = 'app.classeMorta.ClasseMorta.Main'
+}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
