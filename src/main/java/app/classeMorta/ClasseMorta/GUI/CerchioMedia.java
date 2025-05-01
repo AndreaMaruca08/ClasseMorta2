@@ -16,12 +16,13 @@ public class CerchioMedia extends JPanel {
         this.messaggio = messaggio;
 
 
-        Timer timer = new Timer(20, e -> {
+        Timer timer = new Timer(10, e -> {
             if (animazioneMedia < media) {
                 animazioneMedia += 0.1;
                 repaint();
             } else {
                 ((Timer) e.getSource()).stop();
+
             }
             this.setBackground(new Color(170, 60, 70));
         });
@@ -60,7 +61,7 @@ public class CerchioMedia extends JPanel {
         // Testo della media
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("SansSerif", Font.BOLD, 30));
-        String testo = String.format("%.1f", animazioneMedia);
+        String testo = String.format("%.2f", animazioneMedia);
         FontMetrics fm = g2.getFontMetrics();
         int textWidth = fm.stringWidth(testo);
         int textHeight = fm.getAscent();

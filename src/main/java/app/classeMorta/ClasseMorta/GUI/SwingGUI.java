@@ -175,7 +175,7 @@ public class SwingGUI {
                 x = 2;
                 y += 13;
             }
-            CerchioMedia cerchioMediaPiccolo = new CerchioMedia(mediaMateria, 14, materia.getNomeMateria());
+            CerchioMedia cerchioMediaPiccolo = new CerchioMedia(mediaMateria - 0.1, 14, materia.getNomeMateria());
             cerchioMediaPiccolo.setBounds(getX(x), getY(y), getX(10), getY(10));
             JButton cancella = creabottone("",x-2, y,2, 4, 3);
             cancella.addActionListener(_ -> {
@@ -271,15 +271,16 @@ public class SwingGUI {
             cardLayout.show(panelContainer, "main");
         });
         panel.add(ritorno);
-        JPanel panel1 = sottoPanelMedie(1, 3 , 40, 70);
+        JPanel panel1 = sottoPanelMedie(1, 3 , 40, 80);
         Float mediaMat = logicUtil.calcolaMediaPerMateria(materia.getIdMateria(), id);
-        CerchioMedia cerchioMedia = new CerchioMedia(mediaMat, 14, "Media");
+        CerchioMedia cerchioMedia = new CerchioMedia(mediaMat - 0.1, 14, "Media");
         cerchioMedia.setBounds(getX(5), getY(5), getX(10), getY(10));
         panel1.add(cerchioMedia);
 
+        //stampa media Ipotetica
         int x = 2, y = 20;
         float votoIpotetico = 0.0F;
-        for(int i = 0, j = 0; i < 20; i++, j++){
+        for(int i = 0, j = 0; i < 21; i++, j++){
             //aumenti
             if(j == 4){
                 j = 0;
@@ -287,7 +288,7 @@ public class SwingGUI {
                 y += 10;
             }
             mediaMat = logicUtil.calcolaMediaPerMateria(materia.getIdMateria(), id , votoIpotetico);
-            CerchioMedia cerchioMediaIp = new CerchioMedia(mediaMat, 14, "Media con " + votoIpotetico);
+            CerchioMedia cerchioMediaIp = new CerchioMedia(mediaMat - 0.1, 14, "Media con " + votoIpotetico);
             cerchioMediaIp.setBounds(getX(x), getY(y), getX(10), getY(10));
             votoIpotetico += 0.5F;
             panel1.add(cerchioMediaIp);
