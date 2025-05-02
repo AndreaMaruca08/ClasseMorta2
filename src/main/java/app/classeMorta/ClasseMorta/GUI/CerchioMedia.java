@@ -8,7 +8,7 @@ public class CerchioMedia extends JPanel {
     private final double media; // da 0 a 10
     private final int thickness;
     private final String messaggio;
-    private double animazioneMedia = 0;
+    private double animazioneMedia = 0.0000000000000000;
 
     public CerchioMedia(double media, int thickness, String messaggio) {
         this.media = media;
@@ -17,15 +17,17 @@ public class CerchioMedia extends JPanel {
 
 
         Timer timer = new Timer(10, e -> {
-            if (animazioneMedia < media) {
+            if (animazioneMedia < media - 0.001) { // piccola tolleranza
                 animazioneMedia += 0.1;
                 repaint();
             } else {
+                animazioneMedia = media; // forza valore finale corretto
+                repaint();
                 ((Timer) e.getSource()).stop();
-
             }
             this.setBackground(new Color(170, 60, 70));
         });
+
         timer.start();
     }
 
@@ -43,7 +45,7 @@ public class CerchioMedia extends JPanel {
         g2.fillOval(pad, pad, size - thickness, size - thickness);
 
         // Cerchio vuoto
-        g2.setColor(Color.gray);
+        g2.setColor(new Color(246, 207, 204));
         g2.fillOval(pad, pad, size - thickness, size - thickness);
 
         // Cerchio riempito
@@ -59,7 +61,7 @@ public class CerchioMedia extends JPanel {
         g2.drawArc(pad, pad, size - thickness, size - thickness, 90, -(int) angolo);
 
         // Testo della media
-        g2.setColor(Color.WHITE);
+        g2.setColor(Color.black);
         g2.setFont(new Font("SansSerif", Font.BOLD, 30));
         String testo = String.format("%.2f", animazioneMedia);
         FontMetrics fm = g2.getFontMetrics();
@@ -83,6 +85,6 @@ public class CerchioMedia extends JPanel {
 
         g2.setFont(labelFont);
         int labelWidth = labelFm.stringWidth(messaggio);
-        g2.drawString(messaggio, (getWidth() - labelWidth) / 2 - 27, getHeight() / 2 + textHeight );
+        g2.drawString(messaggio, (getWidth() - labelWidth) / 2 - 27, getHeight() / 2 + textHeight -15);
     }
 }

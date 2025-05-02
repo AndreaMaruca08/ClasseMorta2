@@ -30,6 +30,13 @@ public class LogicUtil {
         this.materieService = materieService;
         this.votiService = votiService;
     }
+
+    /**
+     * <b>Funzione che controlla che email e password siano corrette per effettuare l'accesso con un account</b>
+     * @param email necessaria per il controllo
+     * @param password necessaria per il controllo
+     * @return valore booleano, se <code>true</code> significa che email e password sono corrette, se <code>false</code> c'è stato un errore
+     */
     public boolean isStudentPresent(String email, char[] password){
         Optional<Studenti> tempStudent = studentiRepository.findByEmail(email);
         if (tempStudent.isPresent()) {
@@ -47,6 +54,14 @@ public class LogicUtil {
         }
 
     }
+    //funzioni per il calcolo della media
+
+    /**
+     * <b>Funzione che restituisce la media calcolata per materia di uno studente</b>
+     * @param idMateria per calcolare la media della materia giusta
+     * @param idStudente per sapere di quale studente è la media da calcolare
+     * @return valore in <code>Float</code> della media per materia
+     */
     public Float calcolaMediaPerMateria(Long idMateria, Long idStudente){
         Float somma = 0.0F;
         List<Voti> listaVoti = votiService.getVotiPerMateriaEID(idMateria, idStudente);
@@ -59,6 +74,13 @@ public class LogicUtil {
         }
         return somma / listaVoti.size();
     }
+    /**
+     * <b>Funzione che restituisce la media calcolata per materia di uno studente ma con un voto in più</b>
+     * @param idMateria per calcolare la media della materia giusta
+     * @param idStudente per sapere di quale studente è la media da calcolare
+     * @param votoIpotetico valore in più per calcolare una media ipotetica con un voto in più
+     * @return valore in <code>Float</code> della media per materia
+     */
     public Float calcolaMediaPerMateria(Long idMateria, Long idStudente, Float votoIpotetico){
         Float somma = 0.0F;
         List<Voti> listaVoti = votiService.getVotiPerMateriaEID(idMateria, idStudente);
@@ -73,6 +95,11 @@ public class LogicUtil {
         somma += votoIpotetico;
         return somma / (listaVoti.size() + 1);
     }
+    /**
+     * <b>Funzione che calcola la media totale tra tutte le materie</b>
+     * @param idStudente dello studente della quale serve la media totale
+     * @return valore in <code>Float</code> della media totale tra tutte le materie
+     */
     public Float calcolaMediaTot(Long idStudente){
         float sommaTot = 0.0F;
         int materieConVoti = 0;
@@ -99,6 +126,11 @@ public class LogicUtil {
 
         return sommaTot / materieConVoti;
     }
+    /**
+     * <b>Funzione che cancella una materia che si vuole</b>
+     * @param materia da cancellare
+     * @return valore <code>boolean</code> che restituisce vero se la materia è stata cancellata correttamente
+     */
     public boolean cancellaMateria(Materie materia){
         System.out.println("ENTRO IN CANCELLA");
         if(sceltaYN("cancellare", "Vuoi davvero cancellare questa Materia?") == 0) {
@@ -106,7 +138,26 @@ public class LogicUtil {
         }
         else return false;
     }
-
+    /**
+     * <b>Funzione che aggiunge un voto <code>Voti</code> a uno studente in una specifica materia</b>
+     * @param voto da mettere
+     * @param materia alla quale aggiungere il voto
+     * @param studenti alla quale appartiene il voto
+     */
+    public void aggiungiVoto(Float voto, Materie materia, Studenti studenti){
+        votiService.salvaVoto(voto, materia, studenti);
+    }
+    /**
+     * <b>Funzione che cancella un voto </b>
+     * @param voto da cancellare
+     * @return valore <code>boolean</code>, se <code>true</code> vuol dire che è andato tutto a buon fine
+     */
+    public boolean cancellaVoto(Voti voto){
+        if(sceltaYN("cancellare", "Vuoi davvero cancellare questo Voto?") == 0) {
+            return votiService.cancellaVoto(voto.getVotoID());
+        }
+        else return false;
+    }
 
 
 

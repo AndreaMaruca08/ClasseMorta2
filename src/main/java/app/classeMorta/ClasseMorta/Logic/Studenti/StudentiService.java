@@ -40,6 +40,9 @@ public class StudentiService {
             System.out.println("ERRORE in 'salvaUtente' in StudentiService");
         }
     }
+    public Studenti getStudenteByID(Long id){
+        return studentiRepository.getReferenceById(id);
+    }
 
 
 }
