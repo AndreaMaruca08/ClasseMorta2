@@ -12,10 +12,94 @@ java {
 		languageVersion = JavaLanguageVersion.of(24)
 	}
 }
+bootJar {
+	archiveFileName = 'ClasseMorta.jar'
+	launchScript() // importante per Unix/macOS
+
+}
+bootJar {
+	manifest {
+		attributes(
+				'Main-Class': 'app.classeMorta.ClasseMorta.Main' // Sostituisci con il percorso corretto della tua classe principale
+		)
+	}
+}
+import org.apache.tools.ant.taskdefs.condition.Os
+
+def appName = "ClasseMorta2"
+
+task createMacApp(dependsOn: bootJar) {
+	doLast {
+		def jarFiles = file("build/libs").listFiles().findAll { it.name.endsWith(".jar") }
+		if (jarFiles.isEmpty()) {
+			throw new GradleException("Nessun JAR trovato in build/libs")
+		}
+		def jarFile = jarFiles.first()
+		def jarName = jarFile.name
+
+		def appDir = file("build/macApp/${appName}.app/Contents")
+		def macOsDir = new File(appDir, "MacOS")
+		def resourcesDir = new File(appDir, "Resources")
+		macOsDir.mkdirs()
+		resourcesDir.mkdirs()
+
+		// File Info.plist base
+		def infoPlist = new File(appDir, "Info.plist")
+		infoPlist.text = """
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key>
+    <string>${appName}</string>
+    <key>CFBundleExecutable</key>
+    <string>${appName}</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.example.${appName.toLowerCase()}</string>
+    <key>CFBundleVersion</key>
+    <string>1.0</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleIconFile</key>
+    <string>icon.icns</string>
+</dict>
+</plist>
+"""
+
+		// Script di avvio
+		def execFile = new File(macOsDir, appName)
+		execFile.text = """#!/bin/bash
+cd "\$(dirname "\$0")"
+java -jar "../../../libs/${jarName}"
+"""
+		execFile.setExecutable(true)
+
+		// Icona finta (vuota) se non presente
+		def iconFile = new File(resourcesDir, "icon.icns")
+		iconFile.createNewFile()
+
+		println "✅ Applicazione macOS creata in: build/macApp/${appName}.app"
+	}
+}
+
+
+
 
 repositories {
 	mavenCentral()
 }
+tasks.withType(Jar) {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+bootJar {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	archiveBaseName.set("ClasseMorta2")
+	archiveVersion.set("")
+	archiveClassifier.set("")
+}
+
+
 bootRun {
 	mainClass = 'app.classeMorta.ClasseMorta.Main'
 }

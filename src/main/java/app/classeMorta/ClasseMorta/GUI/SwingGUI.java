@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.List;
 
 import static app.classeMorta.ClasseMorta.GUI.GUIUtils.*;
@@ -35,6 +36,24 @@ public class SwingGUI {
     @PostConstruct
     public void createGUI() {
         SwingUtilities.invokeLater(() -> {
+            URL imageUrl = getClass().getResource("/img.png");
+            if (imageUrl == null) {
+                System.err.println("Immagine non trovata! Controlla il percorso.");
+                return;
+            }
+            ImageIcon icon = new ImageIcon(imageUrl);
+            Image image = icon.getImage();
+
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Taskbar taskbar = Taskbar.getTaskbar();
+                    if (taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) {
+                        taskbar.setIconImage(image);
+                    }
+                } catch (UnsupportedOperationException | SecurityException e) {
+                    System.err.println("Impossibile impostare l'icona del Dock: " + e.getMessage());
+                }
+            }
             try {
                 UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel"); // Imposta Nimbus
             } catch (Exception e) {
@@ -45,6 +64,7 @@ public class SwingGUI {
             int screenHeight = screenSize.height;
 
             JFrame frame = new JFrame("Classe Morta2");
+            frame.setIconImage(image);
             frame.setSize(screenWidth, screenHeight);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setBackground(Color.white);
