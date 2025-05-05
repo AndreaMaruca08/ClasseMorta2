@@ -34,12 +34,15 @@ public class StudentiService {
 
     public void salvaStudente(String nome, String email, char[] password){
         try {
-            Studenti studente = new Studenti(nome,email,password);
+            Studenti studente = new Studenti(nome, email, password);
             studentiRepository.save(studente);
-        }catch (Exception e){
-            System.out.println("ERRORE in 'salvaUtente' in StudentiService");
+            studentiRepository.flush();  // Forza il flush subito dopo il salvataggio
+        } catch (Exception e) {
+            System.out.println("ERRORE in 'salvaStudente' in StudentiService");
+            e.printStackTrace();  // Aggiungi un trace per il debug completo
         }
     }
+
     public Studenti getStudenteByID(Long id){
         return studentiRepository.getReferenceById(id);
     }
