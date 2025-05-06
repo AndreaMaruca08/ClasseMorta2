@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
+import static javax.swing.JOptionPane.*;
+
+@SuppressWarnings("unused")
 public class GUIUtils {
     //funzioni di supporto
     /**
@@ -108,18 +111,18 @@ public class GUIUtils {
 
 
     public static void mostraErrore(String titolo, Object messaggio){
-        JOptionPane.showMessageDialog(null, messaggio, titolo, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, messaggio, titolo, ERROR_MESSAGE);
     }
     public static void mostraInformazioni(String titolo, Object messaggio){
-        JOptionPane.showMessageDialog(null, messaggio, titolo, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, messaggio, titolo, INFORMATION_MESSAGE);
     }
     public static String input(String titolo, Object messaggio){
-        return JOptionPane.showInputDialog(null, messaggio, titolo, JOptionPane.QUESTION_MESSAGE);
+        return JOptionPane.showInputDialog(null, messaggio, titolo, QUESTION_MESSAGE);
     }
     public static int sceltaOKorNo(String title, Object messaggio){
-        return JOptionPane.showConfirmDialog(null, messaggio, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        return JOptionPane.showConfirmDialog(null, messaggio, title, OK_CANCEL_OPTION, PLAIN_MESSAGE);
     }
     public static int sceltaYN(String title, Object messaggio){
-        return JOptionPane.showConfirmDialog(null, messaggio, title, JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE);
+        return JOptionPane.showConfirmDialog(null, messaggio, title, YES_NO_OPTION, PLAIN_MESSAGE);
     }
 }

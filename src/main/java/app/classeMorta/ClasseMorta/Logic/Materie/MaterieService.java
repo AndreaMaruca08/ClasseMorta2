@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MaterieService {
@@ -15,23 +14,25 @@ public class MaterieService {
         this.materieRepository = materieRepository;
     }
 
-    public List<Materie> getAllMaterie(){
+    public List<Materie> getAllMaterie() {
         return materieRepository.findAll();
     }
-    public void saveMateria(String nomeMateria){
+
+    public void saveMateria(String nomeMateria) {
         try {
             Materie newMateria = new Materie(nomeMateria);
             materieRepository.save(newMateria);
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("ERRORE in 'salvaMateria' in MateriaService");
         }
     }
 
-    public boolean existByName(String nomeMateria){
+    public boolean existByName(String nomeMateria) {
         return materieRepository.existsByNomeMateria(nomeMateria);
     }
+
     public boolean eliminaMateria(Long idMateria) {
-        Optional<Materie> materia = materieRepository.findById(idMateria);
+        var materia = materieRepository.findById(idMateria);
         if (materia.isPresent()) {
             materieRepository.delete(materia.get()); // grazie a Cascade.ALL elimina anche i voti
             return true;

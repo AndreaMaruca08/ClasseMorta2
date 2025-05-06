@@ -20,12 +20,13 @@ public class VotiService {
     }
 
     public List<Voti> getVotiPerMateriaEID(Long idMateria, Long idStudente){
-        return votiRepository.findAllByStudenteIdAndMateriaId(idStudente, idMateria);
+        return votiRepository.findAllByStudente_IdAndMateria_IdMateria(idStudente, idMateria);
     }
     public void salvaVoto(Float voto, Materie materia, Studenti studenti){
         Voti voto1 = new Voti(voto, studenti, materia, LocalDate.now());
         votiRepository.save(voto1);
     }
+
     public boolean cancellaVoto(Long id){
         Optional<Voti> voto = votiRepository.findById(id);
         if (voto.isPresent()) {

@@ -9,6 +9,7 @@ import app.classeMorta.ClasseMorta.Logic.Voti.VotiService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
@@ -86,6 +87,7 @@ public class SwingGUI {
     }
 
     //PAGINE EFFETTIVE
+
     /**
      * <b>Pagina per la creazione di un account</b>
      */
@@ -132,6 +134,7 @@ public class SwingGUI {
 
         return creaPanel;
     }
+
     /**
      *  <b>Pagina per l'accesso con un account</b>
      */
@@ -184,6 +187,7 @@ public class SwingGUI {
 
         return accediPanel;
     }
+
     /**
      * <b>Pagina principale, contiene tutte le medie e gli accessi alle materie</b>
      */
@@ -201,7 +205,7 @@ public class SwingGUI {
         aggiungiMateria.addActionListener(_ -> cardLayout.show(panelContainer, "aggiungiMateria"));
         panel.add(aggiungiMateria);
         //bottone per disconnettersi
-        JButton disconnetti = creabottone("Disconnetti", 80, 80, 20, 10, 20 );
+        JButton disconnetti = creabottone("Disconnetti", 80, 80, 20, 10, 20);
         disconnetti.addActionListener(_ -> {
             panelContainer.add(accediPanel(cardLayout, panelContainer), "accesso");
             cardLayout.show(panelContainer, "accesso");
@@ -210,6 +214,7 @@ public class SwingGUI {
 
         return panel;
     }
+
     /**
      *<b>Pagina per la creazione di una materia</b>
      */
@@ -220,10 +225,11 @@ public class SwingGUI {
         panel.add(pannelloAggiuntaMateria(cardLayout, panelContainer));
         return panel;
     }
+
     /**
      *<b>Pagina interna a una materia per vedere medie ipotetiche e voti</b>
      */
-    public JPanel internoMateria(CardLayout cardLayout, JPanel panelContainer, Materie materia){
+    public JPanel internoMateria(CardLayout cardLayout, JPanel panelContainer, Materie materia) {
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(0, 0, getX(100), getY(100));
@@ -232,7 +238,7 @@ public class SwingGUI {
         panel.add(creaLabel(materia.getNomeMateria(), 0, 0, 100, 10, 35));
         JButton ritorno = creabottone("Ritorna", 0, 85, 10, 5, 18);
         ritorno.addActionListener(_ -> {
-            aggiornaMainPage(cardLayout,panelContainer);
+            aggiornaMainPage(cardLayout, panelContainer);
             cardLayout.show(panelContainer, "main");
         });
         panel.add(ritorno);
@@ -243,17 +249,17 @@ public class SwingGUI {
 
         //menù per la selezione del voto
         Float[] voti = {
-                (float)0.0, (float)0.5, (float)1,  (float)1.5, (float)2,  (float)2.5,
-                (float)3,   (float)3.5, (float)4,  (float)4.5, (float)5,  (float)5.5, (float)6,
-                (float)6.5, (float)7,   (float)7.5,(float)8,   (float)8.5,(float)9,   (float)9.5, (float)10
+                (float) 0.0, (float) 0.5, (float) 1, (float) 1.5, (float) 2, (float) 2.5,
+                (float) 3, (float) 3.5, (float) 4, (float) 4.5, (float) 5, (float) 5.5, (float) 6,
+                (float) 6.5, (float) 7, (float) 7.5, (float) 8, (float) 8.5, (float) 9, (float) 9.5, (float) 10
         };
         JComboBox<Float> comboBox = new JComboBox<>(voti);
         comboBox.setBounds(getX(60), getY(5), getX(9), getY(6)); // Posizione e dimensione
 
         //bottone per aggiungere voto
         JButton aggiungiVoto = creabottone("Aggiungi Voto", 70, 5, 20, 7, 20);
-        aggiungiVoto.addActionListener(_ ->{
-            Float voto = (Float)comboBox.getSelectedItem();
+        aggiungiVoto.addActionListener(_ -> {
+            Float voto = (Float) comboBox.getSelectedItem();
             logicUtil.aggiungiVoto(voto, materia, studentiService.getStudenteByID(id));
             aggiornaPaginaMateria(cardLayout, panelContainer, materia);
         });
@@ -265,10 +271,11 @@ public class SwingGUI {
     }
 
     //SOTTO PANNELLI PER UN CODICE PIU' LEGGIBILE
+
     /**
      *<b>Sotto pannello di <code>mainPage()</code> per mettere i bottoni per accedere ai voti delle singole materie</b>
      */
-    public JPanel pannelloStampaBottoni(CardLayout cardLayout, JPanel panelContainer){
+    public JPanel pannelloStampaBottoni(CardLayout cardLayout, JPanel panelContainer) {
         //stampo bottoni
         JPanel panel2 = sottoPanelMedie(40, 10, 60, 70);
         int xBtn = 5, yBtn = 5, j = 0;
@@ -289,10 +296,11 @@ public class SwingGUI {
         }
         return panel2;
     }
+
     /**
      * <b>Sotto pannello di <code>mainPage()</code> per far vedere le medie, quella totale e quelle delle singole materie </b>
      */
-    public JPanel pannelloStampaMedie(double mediaTotale, CardLayout cardLayout, JPanel panelContainer){
+    public JPanel pannelloStampaMedie(double mediaTotale, CardLayout cardLayout, JPanel panelContainer) {
         //stampo delle medie
         JPanel panel1 = sottoPanelMedie(5, 5, 33, 75);
         panel1.setLayout(null);
@@ -309,9 +317,9 @@ public class SwingGUI {
             }
             CerchioMedia cerchioMediaPiccolo = new CerchioMedia(mediaMateria, 14, materia.getNomeMateria());
             cerchioMediaPiccolo.setBounds(getX(x), getY(y), getX(10), getY(10));
-            JButton cancella = creabottone("",x-2, y,2, 4, 3);
+            JButton cancella = creabottone("", x - 2, y, 2, 4, 3);
             cancella.addActionListener(_ -> {
-                if(!logicUtil.cancellaMateria(materia))
+                if (!logicUtil.cancellaMateria(materia))
                     mostraErrore("ERRORE", "errore nella cancellazione, materia non esistente");
                 else
                     aggiornaMainPage(cardLayout, panelContainer);
@@ -329,10 +337,11 @@ public class SwingGUI {
         panel1.add(creaLabel("Medie materie", 12, 13, 10, 10, 22));
         return panel1;
     }
+
     /**
      *<b>Sotto pannello di <code>internoMateria()</code> e costituisce la parte con i voti della materia</b>
      */
-    public JPanel pannelloVoti (Materie materia, CardLayout cardLayout, JPanel panelContainer){
+    public JPanel pannelloVoti(Materie materia, CardLayout cardLayout, JPanel panelContainer) {
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(getX(45), getY(15), getX(50), getY(68));
@@ -340,17 +349,17 @@ public class SwingGUI {
 
         //stampa media Ipotetica
         int x = 2, y = 8, i = 0;
-        List<Voti> listaVoti = votiService.getVotiPerMateriaEID(materia.getIdMateria(),id);
-        for(Voti voto : listaVoti){
+        List<Voti> listaVoti = votiService.getVotiPerMateriaEID(materia.getIdMateria(), id);
+        for (Voti voto : listaVoti) {
             //aumenti
-            if(i == 4){
+            if (i == 4) {
                 i = 0;
                 x = 2;
                 y += 10;
             }
-            JButton cancella = creabottone("",x-2, y,2, 4, 3);
+            JButton cancella = creabottone("", x - 2, y, 2, 4, 3);
             cancella.addActionListener(_ -> {
-                if(!logicUtil.cancellaVoto(voto))
+                if (!logicUtil.cancellaVoto(voto))
                     mostraErrore("ERRORE", "errore nella cancellazione, voto non esistente");
                 else
                     aggiornaPaginaMateria(cardLayout, panelContainer, materia);
@@ -359,7 +368,7 @@ public class SwingGUI {
             cancella.setBackground(Color.black);
             //aggiunte
             panel.add(cancella);
-            CerchioMedia cerchioMediaIp = new CerchioMedia(voto.getVoto() , 14, ""+ voto.getData());
+            CerchioMedia cerchioMediaIp = new CerchioMedia(voto.getVoto(), 14, "" + voto.getData());
             cerchioMediaIp.setBounds(getX(x), getY(y), getX(10), getY(10));
             panel.add(cerchioMediaIp);
 
@@ -370,11 +379,12 @@ public class SwingGUI {
 
         return panel;
     }
+
     /**
      *<b>Sotto pannello di <code>internoMateria()</code> per far vedere la media della materia attuale e tutte le medie ipotetiche</b>
      */
-    public JPanel pannelloVotiIpotetici(Materie materia){
-        JPanel panel1 = sottoPanelMedie(1, 3 , 40, 80);
+    public JPanel pannelloVotiIpotetici(Materie materia) {
+        JPanel panel1 = sottoPanelMedie(1, 3, 40, 80);
         Float mediaMat = logicUtil.calcolaMediaPerMateria(materia.getIdMateria(), id);
         CerchioMedia cerchioMedia = new CerchioMedia(mediaMat, 14, "Media");
         cerchioMedia.setBounds(getX(5), getY(5), getX(10), getY(10));
@@ -383,14 +393,14 @@ public class SwingGUI {
         //stampa media Ipotetica
         int x = 2, y = 20;
         float votoIpotetico = 0.0F;
-        for(int i = 0, j = 0; i < 21; i++, j++){
+        for (int i = 0, j = 0; i < 21; i++, j++) {
             //aumenti
-            if(j == 4){
+            if (j == 4) {
                 j = 0;
                 x = 2;
                 y += 10;
             }
-            mediaMat = logicUtil.calcolaMediaPerMateria(materia.getIdMateria(), id , votoIpotetico);
+            mediaMat = logicUtil.calcolaMediaPerMateria(materia.getIdMateria(), id, votoIpotetico);
             CerchioMedia cerchioMediaIp = new CerchioMedia(mediaMat, 14, "Media con " + votoIpotetico);
             cerchioMediaIp.setBounds(getX(x), getY(y), getX(10), getY(10));
             votoIpotetico += 0.5F;
@@ -403,10 +413,11 @@ public class SwingGUI {
         panel1.add(creaLabel("Media " + materia.getNomeMateria(), -1, -3, 20, 10, 25));
         return panel1;
     }
+
     /**
      *<b>Sotto pannello di <code>creaMateria()</code> per aggiungere la materia</b>
      */
-    public JPanel pannelloAggiuntaMateria(CardLayout cardLayout, JPanel panelContainer){
+    public JPanel pannelloAggiuntaMateria(CardLayout cardLayout, JPanel panelContainer) {
         JPanel panel1 = sottoPanelMedie(25, 12, 50, 35);
         panel1.add(creaLabel("Aggiungi materia", 5, 5, 40, 5, 30));
         panel1.add(creaLabel("Nome della materia:", 5, 15, 15, 5, 20));
@@ -422,7 +433,7 @@ public class SwingGUI {
 
         JButton ritorno = creabottone("Ritorna", 5, 25, 10, 5, 18);
         ritorno.addActionListener(_ -> {
-            aggiornaMainPage(cardLayout,panelContainer);
+            aggiornaMainPage(cardLayout, panelContainer);
             cardLayout.show(panelContainer, "main");
         });
 
@@ -433,6 +444,7 @@ public class SwingGUI {
     }
 
     //PANELLO DI SUPPORTO
+
     /**
      *<b>Semplice pannello per fare delle piccole zone di colore differente in modo che sia più bello</b>
      */
@@ -445,21 +457,23 @@ public class SwingGUI {
     }
 
     //PANNELLI DI AGGIORNAMENTO
+
     /** <b>Aggiorna la pagina principale</b>
      */
     public void aggiornaMainPage(CardLayout cardLayout, JPanel panelContainer) {
         panelContainer.removeAll();
-        panelContainer.add(creaMateria(cardLayout,panelContainer), "aggiungiMateria");
+        panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
         panelContainer.add(creaPanel(cardLayout, panelContainer), "crea");
         panelContainer.add(mainPage(logicUtil.calcolaMediaTot(id), cardLayout, panelContainer), "main");
         cardLayout.show(panelContainer, "main");
     }
+
     /**
      * <b>Aggiorna la pagina delle materie</b>
      */
-    public void aggiornaPaginaMateria(CardLayout cardLayout, JPanel panelContainer, Materie materia){
+    public void aggiornaPaginaMateria(CardLayout cardLayout, JPanel panelContainer, Materie materia) {
         panelContainer.removeAll();
-        panelContainer.add(creaMateria(cardLayout,panelContainer), "aggiungiMateria");
+        panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
         panelContainer.add(creaPanel(cardLayout, panelContainer), "crea");
         panelContainer.add(internoMateria(cardLayout, panelContainer, materia), "interno");
         panelContainer.add(mainPage(logicUtil.calcolaMediaTot(id), cardLayout, panelContainer), "main");

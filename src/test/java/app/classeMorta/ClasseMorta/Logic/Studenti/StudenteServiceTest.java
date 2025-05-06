@@ -1,13 +1,8 @@
-package app.classeMorta.ClasseMorta;
+package app.classeMorta.ClasseMorta.Logic.Studenti;
 
-import app.classeMorta.ClasseMorta.Logic.Studenti.Studenti;
-import app.classeMorta.ClasseMorta.Logic.Studenti.StudentiRepository;
-import app.classeMorta.ClasseMorta.Logic.Studenti.StudentiService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,9 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
-@ActiveProfiles("test")
 @Transactional
-@TestPropertySource(locations = "classpath:application-test.properties")
 public class StudenteServiceTest {
 
     private final StudentiService studentiService;
