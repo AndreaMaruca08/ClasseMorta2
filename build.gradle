@@ -17,6 +17,9 @@ bootJar {
 	launchScript() // importante per Unix/macOS
 
 }
+test{
+	jvmArgs += "--enable-native-access=ALL-UNNAMED"
+}
 
 bootJar {
 	manifest {
@@ -98,6 +101,9 @@ bootJar {
 	archiveBaseName.set("ClasseMorta2")
 	archiveVersion.set("")
 	archiveClassifier.set("")
+}
+tasks.withType(JavaExec).configureEach {
+	jvmArgs += "--enable-native-access=ALL-UNNAMED"
 }
 
 
