@@ -21,11 +21,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestPropertySource(locations = "classpath:application-test.properties")
 public class StudenteServiceTest {
 
-    @Autowired
-    private StudentiService studentiService;
+    private final StudentiService studentiService;
+    private final StudentiRepository studentiRepository;
 
     @Autowired
-    private StudentiRepository studentiRepository;
+    public StudenteServiceTest(StudentiService studentiService, StudentiRepository studentiRepository) {
+        this.studentiService = studentiService;
+        this.studentiRepository = studentiRepository;
+    }
 
     @Test
     void testSalvaStudenteNelDatabase() {
@@ -36,9 +39,9 @@ public class StudenteServiceTest {
         //controllo che ci sia un solo utente(per essere sicuri che abbia effettivamente creato un utente)
         assertEquals(1, studenti.size());
         //controllo che il nome sia giusto
-        assertEquals("Test", studenti.get(0).getName());
+        assertEquals("Test", studenti.getFirst().getName());
         //controllo l'email
-        assertEquals("test@gmail.com", studenti.get(0).getEmail());
+        assertEquals("test@gmail.com", studenti.getFirst().getEmail());
     }
 
 }
