@@ -29,7 +29,7 @@ public class StudentiService {
         return false;
     }
     public boolean isEmailUsed(String email){
-        return studentiRepository.findByEmail(email).isEmpty();
+        return studentiRepository.findByEmail(email).isPresent();
     }
 
     public void salvaStudente(String nome, String email, char[] password){
@@ -39,7 +39,6 @@ public class StudentiService {
             studentiRepository.flush();  // Forza il flush subito dopo il salvataggio
         } catch (Exception e) {
             System.out.println("ERRORE in 'salvaStudente' in StudentiService");
-            e.printStackTrace();  // Aggiungi un trace per il debug completo
         }
     }
 

@@ -113,7 +113,7 @@ public class SwingGUI {
         esci.addActionListener(_ -> System.exit(0));
         creaAccount.addActionListener(_ -> {
             try {
-                if (studentiService.isEmailUsed(areaEmail.getText())) {
+                if (!studentiService.isEmailUsed(areaEmail.getText())) {
                     studentiService.salvaStudente(areaNome.getText(), areaEmail.getText(), (areaPassword.getPassword()));
                     mostraInformazioni("SUCCESSO", "Account creato con successo");
                 }
@@ -450,6 +450,7 @@ public class SwingGUI {
     public void aggiornaMainPage(CardLayout cardLayout, JPanel panelContainer) {
         panelContainer.removeAll();
         panelContainer.add(creaMateria(cardLayout,panelContainer), "aggiungiMateria");
+        panelContainer.add(creaPanel(cardLayout, panelContainer), "crea");
         panelContainer.add(mainPage(logicUtil.calcolaMediaTot(id), cardLayout, panelContainer), "main");
         cardLayout.show(panelContainer, "main");
     }
@@ -459,6 +460,7 @@ public class SwingGUI {
     public void aggiornaPaginaMateria(CardLayout cardLayout, JPanel panelContainer, Materie materia){
         panelContainer.removeAll();
         panelContainer.add(creaMateria(cardLayout,panelContainer), "aggiungiMateria");
+        panelContainer.add(creaPanel(cardLayout, panelContainer), "crea");
         panelContainer.add(internoMateria(cardLayout, panelContainer, materia), "interno");
         panelContainer.add(mainPage(logicUtil.calcolaMediaTot(id), cardLayout, panelContainer), "main");
         cardLayout.show(panelContainer, "interno");
