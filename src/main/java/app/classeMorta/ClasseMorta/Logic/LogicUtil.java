@@ -73,9 +73,10 @@ public class LogicUtil {
      */
     public Float calcolaMediaPerMateria(Long idMateria, Long idStudente, float votoIpotetico) {
         var somma = 0.0F;
+        int aumento = 0;
         List<Voti> listaVoti = votiService.getVotiPerMateriaEID(idMateria, idStudente);
 
-        if (listaVoti == null || listaVoti.isEmpty()) { // AGGIUNGI QUESTO CONTROLLO
+        if (listaVoti == null || listaVoti.isEmpty()) {
             System.out.println("Nessun voto per questa materia");
             return 0.0F;
         }
@@ -83,7 +84,9 @@ public class LogicUtil {
             somma += voti.getVoto();
         }
         somma += votoIpotetico;
-        return somma / (listaVoti.size() + 1);
+        if(votoIpotetico != 0)
+            aumento = 1;
+        return somma / (listaVoti.size() + aumento);
     }
 
     /**
