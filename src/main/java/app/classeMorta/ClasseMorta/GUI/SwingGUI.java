@@ -3,6 +3,7 @@ package app.classeMorta.ClasseMorta.GUI;
 import app.classeMorta.ClasseMorta.Logic.LogicUtil;
 import app.classeMorta.ClasseMorta.Logic.Materie.Materie;
 import app.classeMorta.ClasseMorta.Logic.Materie.MaterieService;
+import app.classeMorta.ClasseMorta.Logic.MediaService;
 import app.classeMorta.ClasseMorta.Logic.Studenti.StudentiService;
 import app.classeMorta.ClasseMorta.Logic.Voti.Voti;
 import app.classeMorta.ClasseMorta.Logic.Voti.VotiService;
@@ -25,13 +26,15 @@ public class SwingGUI {
     private final StudentiService studentiService;
     private final MaterieService materieService;
     private final VotiService votiService;
+    private final MediaService mediaService;
 
     @Autowired
-    public SwingGUI(LogicUtil logicUtil, StudentiService studentiService, MaterieService materieService, VotiService votiService) {
+    public SwingGUI(LogicUtil logicUtil, StudentiService studentiService, MaterieService materieService, VotiService votiService, MediaService mediaService) {
         this.logicUtil = logicUtil;
         this.studentiService = studentiService;
         this.materieService = materieService;
         this.votiService = votiService;
+        this.mediaService = mediaService;
     }
 
     @PostConstruct
@@ -167,7 +170,7 @@ public class SwingGUI {
                     id = studentiService.getStudentIdByEmail(email);
 
                     panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
-                    panelContainer.add(mainPage(logicUtil.calcolaMediaTot(id), cardLayout, panelContainer), "main");
+                    panelContainer.add(mainPage(mediaService.calcolaMediaTot(id), cardLayout, panelContainer), "main");
                     cardLayout.show(panelContainer, "main");
                 }
 
@@ -309,7 +312,7 @@ public class SwingGUI {
         panel1.add(cerchioMedia);
         int x = 2, y = 20, i = 0;
         for (Materie materia : materieService.getAllMaterie()) {
-            Float mediaMateria = logicUtil.calcolaMediaPerMateria(materia.getIdMateria(), id);
+            Float mediaMateria = mediaService.calcolaMediaPerMateria(materia.getIdMateria(), id);
             if (i == 3) {
                 i = 0;
                 x = 2;
@@ -385,7 +388,7 @@ public class SwingGUI {
      */
     public JPanel pannelloVotiIpotetici(Materie materia) {
         JPanel panel1 = sottoPanelMedie(1, 3, 40, 80);
-        Float mediaMat = logicUtil.calcolaMediaPerMateria(materia.getIdMateria(), id);
+        Float mediaMat = mediaService.calcolaMediaPerMateria(materia.getIdMateria(), id);
         CerchioMedia cerchioMedia = new CerchioMedia(mediaMat, 14, "Media");
         cerchioMedia.setBounds(getX(5), getY(5), getX(10), getY(10));
         panel1.add(cerchioMedia);
@@ -400,7 +403,7 @@ public class SwingGUI {
                 x = 2;
                 y += 10;
             }
-            mediaMat = logicUtil.calcolaMediaPerMateria(materia.getIdMateria(), id, votoIpotetico);
+            mediaMat = mediaService.calcolaMediaPerMateria(materia.getIdMateria(), id, votoIpotetico);
             CerchioMedia cerchioMediaIp = new CerchioMedia(mediaMat, 14, "Media con " + votoIpotetico);
             cerchioMediaIp.setBounds(getX(x), getY(y), getX(10), getY(10));
             votoIpotetico += 0.5F;
@@ -464,7 +467,7 @@ public class SwingGUI {
         panelContainer.removeAll();
         panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
         panelContainer.add(creaPanel(cardLayout, panelContainer), "crea");
-        panelContainer.add(mainPage(logicUtil.calcolaMediaTot(id), cardLayout, panelContainer), "main");
+        panelContainer.add(mainPage(mediaService.calcolaMediaTot(id), cardLayout, panelContainer), "main");
         cardLayout.show(panelContainer, "main");
     }
 
@@ -476,7 +479,7 @@ public class SwingGUI {
         panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
         panelContainer.add(creaPanel(cardLayout, panelContainer), "crea");
         panelContainer.add(internoMateria(cardLayout, panelContainer, materia), "interno");
-        panelContainer.add(mainPage(logicUtil.calcolaMediaTot(id), cardLayout, panelContainer), "main");
+        panelContainer.add(mainPage(mediaService.calcolaMediaTot(id), cardLayout, panelContainer), "main");
         cardLayout.show(panelContainer, "interno");
     }
 }
