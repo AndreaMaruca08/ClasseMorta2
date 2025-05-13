@@ -1,4 +1,4 @@
-package app.classeMorta.ClasseMorta.Logic.Voti;
+package app.classeMorta.ClasseMorta.Logic.controller;
 
 import org.springframework.stereotype.Controller;
 

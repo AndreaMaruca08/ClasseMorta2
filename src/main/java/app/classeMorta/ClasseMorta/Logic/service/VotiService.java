@@ -1,7 +1,9 @@
-package app.classeMorta.ClasseMorta.Logic.Voti;
+package app.classeMorta.ClasseMorta.Logic.service;
 
-import app.classeMorta.ClasseMorta.Logic.Materie.Materie;
-import app.classeMorta.ClasseMorta.Logic.Studenti.Studenti;
+import app.classeMorta.ClasseMorta.Logic.repository.VotiRepository;
+import app.classeMorta.ClasseMorta.Logic.models.Materie;
+import app.classeMorta.ClasseMorta.Logic.models.Studenti;
+import app.classeMorta.ClasseMorta.Logic.models.Voti;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

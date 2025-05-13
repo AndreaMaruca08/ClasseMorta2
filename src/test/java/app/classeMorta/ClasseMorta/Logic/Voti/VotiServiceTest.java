@@ -1,12 +1,12 @@
-package app.classeMorta.ClasseMorta;
+package app.classeMorta.ClasseMorta.Logic.Voti;
 
-import app.classeMorta.ClasseMorta.Logic.Materie.Materie;
-import app.classeMorta.ClasseMorta.Logic.Materie.MaterieRepository;
-import app.classeMorta.ClasseMorta.Logic.Studenti.Studenti;
-import app.classeMorta.ClasseMorta.Logic.Studenti.StudentiRepository;
-import app.classeMorta.ClasseMorta.Logic.Voti.Voti;
-import app.classeMorta.ClasseMorta.Logic.Voti.VotiRepository;
-import app.classeMorta.ClasseMorta.Logic.Voti.VotiService;
+import app.classeMorta.ClasseMorta.Logic.repository.VotiRepository;
+import app.classeMorta.ClasseMorta.Logic.service.VotiService;
+import app.classeMorta.ClasseMorta.Logic.models.Materie;
+import app.classeMorta.ClasseMorta.Logic.repository.MaterieRepository;
+import app.classeMorta.ClasseMorta.Logic.models.Studenti;
+import app.classeMorta.ClasseMorta.Logic.repository.StudentiRepository;
+import app.classeMorta.ClasseMorta.Logic.models.Voti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,17 +20,18 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 @SpringBootTest
 public class VotiServiceTest {
 
-    @Autowired
-    private VotiService votiService;
 
+    private final VotiService votiService;
+    private final VotiRepository votiRepository;
+    private final StudentiRepository studentiRepository;
+    private final MaterieRepository materieRepository;
     @Autowired
-    private VotiRepository votiRepository;
-
-    @Autowired
-    private StudentiRepository studentiRepository;
-
-    @Autowired
-    private MaterieRepository materieRepository;
+    public VotiServiceTest(VotiService votiService, VotiRepository votiRepository, StudentiRepository studentiRepository, MaterieRepository materieRepository) {
+        this.votiService = votiService;
+        this.votiRepository = votiRepository;
+        this.studentiRepository = studentiRepository;
+        this.materieRepository = materieRepository;
+    }
 
     @Test
     @Transactional

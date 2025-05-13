@@ -1,5 +1,7 @@
-package app.classeMorta.ClasseMorta.Logic.Studenti;
+package app.classeMorta.ClasseMorta.Logic.service;
 
+import app.classeMorta.ClasseMorta.Logic.repository.StudentiRepository;
+import app.classeMorta.ClasseMorta.Logic.models.Studenti;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,9 @@ public class StudentiService {
 
     public Studenti getStudenteByID(Long id){
         return studentiRepository.getReferenceById(id);
+    }
+    public Optional<Studenti> getStudenteByEmail(String email){
+        return studentiRepository.findByEmail(email);
     }
 
 

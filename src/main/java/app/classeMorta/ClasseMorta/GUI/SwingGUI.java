@@ -1,13 +1,16 @@
 package app.classeMorta.ClasseMorta.GUI;
 
-import app.classeMorta.ClasseMorta.Logic.LogicUtil;
-import app.classeMorta.ClasseMorta.Logic.Materie.Materie;
-import app.classeMorta.ClasseMorta.Logic.Materie.MaterieService;
-import app.classeMorta.ClasseMorta.Logic.MediaService;
-import app.classeMorta.ClasseMorta.Logic.Studenti.StudentiService;
-import app.classeMorta.ClasseMorta.Logic.Voti.Voti;
-import app.classeMorta.ClasseMorta.Logic.Voti.VotiService;
+import app.classeMorta.ClasseMorta.Logic.models.Materie;
+import app.classeMorta.ClasseMorta.Logic.service.MaterieService;
+import app.classeMorta.ClasseMorta.Logic.service.MediaService;
+import app.classeMorta.ClasseMorta.Logic.service.StudentiService;
+import app.classeMorta.ClasseMorta.Logic.models.Studenti;
+import app.classeMorta.ClasseMorta.Logic.models.Voti;
+import app.classeMorta.ClasseMorta.Logic.service.VotiService;
+
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,22 +18,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
 import static app.classeMorta.ClasseMorta.GUI.GUIUtils.*;
 
 @Component
 public class SwingGUI {
+    private static final Logger log = LoggerFactory.getLogger(SwingGUI.class);
     private Long id;
 
-    private final LogicUtil logicUtil;
     private final StudentiService studentiService;
     private final MaterieService materieService;
     private final VotiService votiService;
     private final MediaService mediaService;
 
     @Autowired
-    public SwingGUI(LogicUtil logicUtil, StudentiService studentiService, MaterieService materieService, VotiService votiService, MediaService mediaService) {
-        this.logicUtil = logicUtil;
+    public SwingGUI(StudentiService studentiService, MaterieService materieService, VotiService votiService, MediaService mediaService) {
         this.studentiService = studentiService;
         this.materieService = materieService;
         this.votiService = votiService;
@@ -166,7 +169,7 @@ public class SwingGUI {
                 String email = areaEmail.getText();
                 char[] password = areaPassword.getPassword();
 
-                if (logicUtil.isStudentPresent(email, password)) {
+                if (isStudentPresent(email, password)) {
                     id = studentiService.getStudentIdByEmail(email);
 
                     panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
@@ -176,9 +179,9 @@ public class SwingGUI {
 
             });
         } catch (NullPointerException e) {
-            System.out.println("ERRORE : errore nel caricamento dei dati --NullPointerException--");
+            log.info("ERRORE : errore nel caricamento dei dati in accedi : NullPointerException ");
         } catch (Exception e) {
-            System.out.println("ERRORE : c'e un errore ignoto");
+            log.info("ERRORE in accedi ");
         }
         creazione.addActionListener(_ -> cardLayout.show(panelContainer, "crea"));
 
@@ -263,7 +266,7 @@ public class SwingGUI {
         JButton aggiungiVoto = creabottone("Aggiungi Voto", 70, 5, 20, 7, 20);
         aggiungiVoto.addActionListener(_ -> {
             Float voto = (Float) comboBox.getSelectedItem();
-            logicUtil.aggiungiVoto(voto, materia, studentiService.getStudenteByID(id));
+            aggiungiVoto(voto, materia, studentiService.getStudenteByID(id));
             aggiornaPaginaMateria(cardLayout, panelContainer, materia);
         });
 
@@ -322,7 +325,7 @@ public class SwingGUI {
             cerchioMediaPiccolo.setBounds(getX(x), getY(y), getX(10), getY(10));
             JButton cancella = creabottone("", x - 2, y, 2, 4, 3);
             cancella.addActionListener(_ -> {
-                if (!logicUtil.cancellaMateria(materia))
+                if (cancellaMateria(materia))
                     mostraErrore("ERRORE", "errore nella cancellazione, materia non esistente");
                 else
                     aggiornaMainPage(cardLayout, panelContainer);
@@ -362,7 +365,7 @@ public class SwingGUI {
             }
             JButton cancella = creabottone("", x - 2, y, 2, 4, 3);
             cancella.addActionListener(_ -> {
-                if (!logicUtil.cancellaVoto(voto))
+                if (cancellaVoto(voto))
                     mostraErrore("ERRORE", "errore nella cancellazione, voto non esistente");
                 else
                     aggiornaPaginaMateria(cardLayout, panelContainer, materia);
@@ -482,5 +485,60 @@ public class SwingGUI {
         panelContainer.add(mainPage(mediaService.calcolaMediaTot(id), cardLayout, panelContainer), "main");
         cardLayout.show(panelContainer, "interno");
     }
+
+    //FUNZIONI DI SUPPORTO
+    /**
+     * <b>Funzione che cancella una materia che si vuole</b>
+     * @param materia da cancellare
+     * @return valore <code>boolean</code> che restituisce vero se la materia è stata cancellata correttamente
+     */
+    public boolean cancellaMateria(Materie materia) {
+        log.info("cancello materia");
+        if (sceltaYN("cancellare", "Vuoi davvero cancellare questa Materia?") == 0) {
+            return materieService.eliminaMateria(materia.getIdMateria());
+        } else return false;
+    }
+    /**
+     * <b>Funzione che controlla che email e password siano corrette per effettuare l'accesso con un account</b>
+     * @param email necessaria per il controllo
+     * @param password necessaria per il controllo
+     * @return valore booleano, se <code>true</code> significa che email e password sono corrette, se <code>false</code> c'è stato un errore
+     */
+    public boolean isStudentPresent(String email, char[] password) {
+        Optional<Studenti> tempStudent = studentiService.getStudenteByEmail(email);
+        if (tempStudent.isPresent()) {
+            if (studentiService.verificaCredenziali(email, password)) {
+                return true;
+            } else {
+                mostraErrore("ERRORE", "Password errata");
+                return false;
+            }
+        } else {
+            mostraErrore("ERRORE", "Utente non esistente");
+            return false;
+        }
+
+    }
+    /**
+     * <b>Funzione che aggiunge un voto <code>Voti</code> a uno studente in una specifica materia</b>
+     * @param voto da mettere
+     * @param materia alla quale aggiungere il voto
+     * @param studenti alla quale appartiene il voto
+     */
+    public void aggiungiVoto(Float voto, Materie materia, Studenti studenti) {
+        votiService.salvaVoto(voto, materia, studenti);
+    }
+
+    /**
+     * <b>Funzione che cancella un voto </b>
+     * @param voto da cancellare
+     * @return valore <code>boolean</code>, se <code>true</code> vuol dire che è andato tutto a buon fine
+     */
+    public boolean cancellaVoto(Voti voto) {
+        if (sceltaYN("cancellare", "Vuoi davvero cancellare questo Voto?") == 0) {
+            return votiService.cancellaVoto(voto.getVotoID());
+        } else return false;
+    }
+
 }
 

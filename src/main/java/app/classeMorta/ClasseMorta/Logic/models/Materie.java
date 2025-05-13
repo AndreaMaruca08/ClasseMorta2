@@ -1,11 +1,14 @@
-package app.classeMorta.ClasseMorta.Logic.Materie;
+package app.classeMorta.ClasseMorta.Logic.models;
 
-import app.classeMorta.ClasseMorta.Logic.Voti.Voti;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Materie")
 public class Materie {
     @Id
@@ -18,19 +21,7 @@ public class Materie {
     @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Voti> voti;
 
-    public Materie() {}
-
     public Materie(String nomeMateria) {
         this.nomeMateria = nomeMateria;
     }
-
-    public Long getIdMateria() { return idMateria; }
-
-    public String getNomeMateria() { return nomeMateria; }
-
-    public void setNomeMateria(String nomeMateria) { this.nomeMateria = nomeMateria; }
-
-    public List<Voti> getVoti() { return voti; }
-
-    public void setVoti(List<Voti> voti) { this.voti = voti; }
 }

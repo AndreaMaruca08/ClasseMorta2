@@ -1,5 +1,7 @@
-package app.classeMorta.ClasseMorta.Logic.Materie;
+package app.classeMorta.ClasseMorta.Logic.service;
 
+import app.classeMorta.ClasseMorta.Logic.repository.MaterieRepository;
+import app.classeMorta.ClasseMorta.Logic.models.Materie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

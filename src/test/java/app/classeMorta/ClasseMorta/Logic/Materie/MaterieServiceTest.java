@@ -1,8 +1,8 @@
-package app.classeMorta.ClasseMorta;
+package app.classeMorta.ClasseMorta.Logic.Materie;
 
-import app.classeMorta.ClasseMorta.Logic.Materie.Materie;
-import app.classeMorta.ClasseMorta.Logic.Materie.MaterieRepository;
-import app.classeMorta.ClasseMorta.Logic.Materie.MaterieService;
+import app.classeMorta.ClasseMorta.Logic.repository.MaterieRepository;
+import app.classeMorta.ClasseMorta.Logic.service.MaterieService;
+import app.classeMorta.ClasseMorta.Logic.models.Materie;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

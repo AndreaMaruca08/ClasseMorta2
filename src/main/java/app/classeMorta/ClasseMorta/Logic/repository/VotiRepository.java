@@ -1,5 +1,6 @@
-package app.classeMorta.ClasseMorta.Logic.Voti;
+package app.classeMorta.ClasseMorta.Logic.repository;
 
+import app.classeMorta.ClasseMorta.Logic.models.Voti;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

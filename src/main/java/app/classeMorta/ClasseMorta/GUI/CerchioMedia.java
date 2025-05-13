@@ -8,7 +8,7 @@ public class CerchioMedia extends JPanel {
     private final double media; // da 0 a 10
     private final int thickness;
     private final String messaggio;
-    private double animazioneMedia = 0.0000000000000000;
+    private double animazioneMedia = 0.000;
 
     public CerchioMedia(double media, int thickness, String messaggio) {
         this.media = media;
@@ -37,37 +37,37 @@ public class CerchioMedia extends JPanel {
         int size = Math.min(getWidth(), getHeight());
         int pad = thickness / 2;
 
-        Graphics2D g2 = (Graphics2D) g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D grafica = (Graphics2D) g;
+        grafica.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // Sfondo
-        g2.setColor(Color.red);
-        g2.fillOval(pad, pad, size - thickness, size - thickness);
+        grafica.setColor(Color.red);
+        grafica.fillOval(pad, pad, size - thickness, size - thickness);
 
         // Cerchio vuoto
-        g2.setColor(new Color(246, 207, 204));
-        g2.fillOval(pad, pad, size - thickness, size - thickness);
+        grafica.setColor(new Color(246, 207, 204));
+        grafica.fillOval(pad, pad, size - thickness, size - thickness);
 
         // Cerchio riempito
-        g2.setStroke(new BasicStroke(thickness));
+        grafica.setStroke(new BasicStroke(thickness));
         if (media >= 6)
-            g2.setColor(new Color(102, 204, 0)); // verde
+            grafica.setColor(new Color(102, 204, 0)); // verde
         else if (media >= 5)
-            g2.setColor(new Color(204, 102, 0)); // arancione
+            grafica.setColor(new Color(204, 102, 0)); // arancione
         else
-            g2.setColor(new Color(204, 0, 0)); // rosso
+            grafica.setColor(new Color(204, 0, 0)); // rosso
 
         double angolo = 360 * (animazioneMedia / 10.0);
-        g2.drawArc(pad, pad, size - thickness, size - thickness, 90, -(int) angolo);
+        grafica.drawArc(pad, pad, size - thickness, size - thickness, 90, -(int) angolo);
 
         // Testo della media
-        g2.setColor(Color.black);
-        g2.setFont(new Font("SansSerif", Font.BOLD, 30));
+        grafica.setColor(Color.black);
+        grafica.setFont(new Font("SansSerif", Font.BOLD, 30));
         String testo = String.format("%.2f", animazioneMedia);
-        FontMetrics fm = g2.getFontMetrics();
+        FontMetrics fm = grafica.getFontMetrics();
         int textWidth = fm.stringWidth(testo);
         int textHeight = fm.getAscent();
-        g2.drawString(testo, (getWidth() - textWidth) / 2 - 27, getHeight() / 2 - 5);
+        grafica.drawString(testo, (getWidth() - textWidth) / 2 - 27, getHeight() / 2 - 5);
 
         // Testo del messaggio (ridimensionato)
         int maxLabelWidth = (int)(size * 0.8); // massimo 80% del cerchio
@@ -76,15 +76,15 @@ public class CerchioMedia extends JPanel {
         FontMetrics labelFm;
         do {
             labelFont = new Font("SansSerif", Font.PLAIN, fontSize);
-            g2.setFont(labelFont);
-            labelFm = g2.getFontMetrics();
+            grafica.setFont(labelFont);
+            labelFm = grafica.getFontMetrics();
             if (labelFm.stringWidth(messaggio) <= maxLabelWidth)
                 break;
             fontSize--;
         } while (fontSize > 8); // limite minimo
 
-        g2.setFont(labelFont);
+        grafica.setFont(labelFont);
         int labelWidth = labelFm.stringWidth(messaggio);
-        g2.drawString(messaggio, (getWidth() - labelWidth) / 2 - 27, getHeight() / 2 + textHeight -15);
+        grafica.drawString(messaggio, (getWidth() - labelWidth) / 2 - 27, getHeight() / 2 + textHeight -15);
     }
 }

@@ -1,9 +1,7 @@
-package app.classeMorta.ClasseMorta.Logic;
+package app.classeMorta.ClasseMorta.Logic.service;
 
-import app.classeMorta.ClasseMorta.Logic.Materie.Materie;
-import app.classeMorta.ClasseMorta.Logic.Materie.MaterieService;
-import app.classeMorta.ClasseMorta.Logic.Voti.Voti;
-import app.classeMorta.ClasseMorta.Logic.Voti.VotiService;
+import app.classeMorta.ClasseMorta.Logic.models.Materie;
+import app.classeMorta.ClasseMorta.Logic.models.Voti;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +9,14 @@ import java.util.List;
 
 @Service
 public class MediaService {
+    private final VotiService votiService;
+    private final MaterieService materieService;
+
     @Autowired
-    private VotiService votiService;
-    @Autowired
-    private MaterieService materieService;
+    public MediaService(VotiService votiService, MaterieService materieService) {
+        this.votiService = votiService;
+        this.materieService = materieService;
+    }
     //funzioni per il calcolo della media
     /**
      * <b>Funzione che restituisce la media calcolata per materia di uno studente</b>
@@ -23,7 +25,7 @@ public class MediaService {
      * @return valore in <code>Float</code> della media per materia
      */
     public Float calcolaMediaPerMateria(Long idMateria, Long idStudente) {
-        return calcolaMediaPerMateria(idMateria, idStudente, 0);
+        return calcolaMediaPerMateria(idMateria, idStudente, -1);
     }
 
     /**
@@ -45,9 +47,10 @@ public class MediaService {
         for (Voti voti : listaVoti) {
             somma += voti.getVoto();
         }
-        somma += votoIpotetico;
-        if(votoIpotetico != 0)
+        if(votoIpotetico != -1) {
+            somma += votoIpotetico;
             aumento = 1;
+        }
         return somma / (listaVoti.size() + aumento);
     }
 
@@ -74,7 +77,6 @@ public class MediaService {
                 }
             }
         }
-
         if (materieConVoti == 0) {
             System.out.println("Nessuna materia con voti");
             return 0.0F;

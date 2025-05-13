@@ -1,5 +1,8 @@
 package app.classeMorta.ClasseMorta.Logic.Studenti;
 
+import app.classeMorta.ClasseMorta.Logic.repository.StudentiRepository;
+import app.classeMorta.ClasseMorta.Logic.service.StudentiService;
+import app.classeMorta.ClasseMorta.Logic.models.Studenti;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

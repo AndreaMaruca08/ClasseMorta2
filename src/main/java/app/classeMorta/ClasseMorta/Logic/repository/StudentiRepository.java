@@ -1,5 +1,6 @@
-package app.classeMorta.ClasseMorta.Logic.Studenti;
+package app.classeMorta.ClasseMorta.Logic.repository;
 
+import app.classeMorta.ClasseMorta.Logic.models.Studenti;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
