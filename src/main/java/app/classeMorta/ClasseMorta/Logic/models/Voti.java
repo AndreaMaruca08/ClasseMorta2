@@ -1,12 +1,16 @@
-package app.classeMorta.ClasseMorta.Logic.Voti;
+package app.classeMorta.ClasseMorta.Logic.models;
 
-import app.classeMorta.ClasseMorta.Logic.Materie.Materie;
-import app.classeMorta.ClasseMorta.Logic.Studenti.Studenti;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Voti")
 public class Voti {
     @Id
@@ -33,22 +37,4 @@ public class Voti {
         this.studente = studente;
         this.materia = materia;
     }
-    public Voti(){}
-
-
-
-    public void setVoto(Float voto){this.voto = voto;}
-    public void setStudente(Studenti studente){this.studente = studente;}
-    public void setMateria(Materie materia){this.materia = materia;}
-    public void setData(LocalDate data){this.data = data;}
-
-    public Long getVotoID(){return votoID;}
-    public Float getVoto(){return voto;}
-    public Studenti getStudente(){return studente;}
-    public Materie getMateria(){return materia;}
-    public LocalDate getData(){return data;}
-
-
-
-
 }

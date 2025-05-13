@@ -2,6 +2,8 @@ package app.classeMorta.ClasseMorta.Logic.controller;
 
 import app.classeMorta.ClasseMorta.Logic.service.MaterieService;
 import app.classeMorta.ClasseMorta.Logic.models.Materie;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,15 +63,9 @@ public class MaterieController {
     }
 
     // Classe di supporto per ricevere il corpo JSON del POST
+    @Setter
+    @Getter
     public static class MateriaRequest {
         private String nome;
-
-        public String getNome() {
-            return nome;
-        }
-
-        public void setNome(String nome) {
-            this.nome = nome;
-        }
     }
 }
