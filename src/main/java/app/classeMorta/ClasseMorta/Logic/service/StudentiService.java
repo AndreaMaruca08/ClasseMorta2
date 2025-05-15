@@ -1,13 +1,16 @@
 package app.classeMorta.ClasseMorta.Logic.service;
 
+import app.classeMorta.ClasseMorta.Logic.dto.LoginRequest;
 import app.classeMorta.ClasseMorta.Logic.repository.StudentiRepository;
 import app.classeMorta.ClasseMorta.Logic.models.Studenti;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class StudentiService {
     private final StudentiRepository studentiRepository;
@@ -20,12 +23,12 @@ public class StudentiService {
     public Long getStudentIdByEmail(String email){
         return studentiRepository.getStudentiIDByEmail(email);
     }
-    public boolean verificaCredenziali(String email, char[] password) {
-        Optional<Studenti> studentiOpt = studentiRepository.findByEmail(email);
+    public boolean verificaCredenziali(LoginRequest loginRequest) {
+        Optional<Studenti> studentiOpt = studentiRepository.findByEmail(loginRequest.getEmail());
 
         if (studentiOpt.isPresent()) {
             Studenti utente = studentiOpt.get();
-            return Arrays.equals(utente.getPassword(), password); // (NON SICURO)
+            return Arrays.equals(utente.getPassword(), loginRequest.getPassword()); // (NON SICURO)
         }
 
         return false;
@@ -34,14 +37,16 @@ public class StudentiService {
         return studentiRepository.findByEmail(email).isPresent();
     }
 
-    public void salvaStudente(String nome, String email, char[] password){
+    public boolean salvaStudente(String nome, String email, char[] password){
         try {
             Studenti studente = new Studenti(nome, email, password);
             studentiRepository.save(studente);
             studentiRepository.flush();  // Forza il flush subito dopo il salvataggio
         } catch (Exception e) {
-            System.out.println("ERRORE in 'salvaStudente' in StudentiService");
+            log.info("ERRORE in 'salvaStudente' in StudentiService");
+            return false;
         }
+        return true;
     }
 
     public Studenti getStudenteByID(Long id){

@@ -1,4 +1,4 @@
-package app.classeMorta.ClasseMorta.Logic.Materie;
+package app.classeMorta.ClasseMorta.Logic.service.materie;
 
 import app.classeMorta.ClasseMorta.Logic.repository.MaterieRepository;
 import app.classeMorta.ClasseMorta.Logic.service.MaterieService;

@@ -1,5 +1,6 @@
-package app.classeMorta.ClasseMorta.Logic.Studenti;
+package app.classeMorta.ClasseMorta.Logic.service.Studenti;
 
+import app.classeMorta.ClasseMorta.Logic.dto.LoginRequest;
 import app.classeMorta.ClasseMorta.Logic.repository.StudentiRepository;
 import app.classeMorta.ClasseMorta.Logic.service.StudentiService;
 import app.classeMorta.ClasseMorta.Logic.models.Studenti;
@@ -49,7 +50,8 @@ public class StudenteServiceTest {
         //salvo in h2
         studentiRepository.save(studente);
         //guardo se le credenziali sono corrette
-        boolean result = studentiService.verificaCredenziali("test@gmail.com", "test".toCharArray());
+        LoginRequest loginRequest = new LoginRequest("test@gmail.com", "test".toCharArray());
+        boolean result = studentiService.verificaCredenziali(loginRequest);
         //controllo se ha dato true
         assertTrue(result);
     }
@@ -59,8 +61,8 @@ public class StudenteServiceTest {
         Studenti studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
         //salvo in h2
         studentiRepository.save(studente);
-        //guardo se le credenziali sono corrette
-        boolean result = studentiService.verificaCredenziali("test@gmail.com", "testSbagliato".toCharArray());
+        LoginRequest loginRequest = new LoginRequest("test@gmail.com", "testSbagliato".toCharArray());
+        boolean result = studentiService.verificaCredenziali(loginRequest);
         //controllo se ha dato true
         assertFalse(result);
     }

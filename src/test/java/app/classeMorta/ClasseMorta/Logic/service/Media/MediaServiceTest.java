@@ -1,4 +1,4 @@
-package app.classeMorta.ClasseMorta.Logic.Media;
+package app.classeMorta.ClasseMorta.Logic.service.Media;
 
 import app.classeMorta.ClasseMorta.Logic.models.Materie;
 import app.classeMorta.ClasseMorta.Logic.repository.MaterieRepository;

@@ -1,5 +1,6 @@
 package app.classeMorta.ClasseMorta.GUI;
 
+import app.classeMorta.ClasseMorta.Logic.dto.LoginRequest;
 import app.classeMorta.ClasseMorta.Logic.models.Materie;
 import app.classeMorta.ClasseMorta.Logic.service.MaterieService;
 import app.classeMorta.ClasseMorta.Logic.service.MediaService;
@@ -168,8 +169,8 @@ public class SwingGUI {
 
                 String email = areaEmail.getText();
                 char[] password = areaPassword.getPassword();
-
-                if (isStudentPresent(email, password)) {
+                LoginRequest loginRequest = new LoginRequest(email, password);
+                if (isStudentPresent(loginRequest)) {
                     id = studentiService.getStudentIdByEmail(email);
 
                     panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
@@ -500,14 +501,13 @@ public class SwingGUI {
     }
     /**
      * <b>Funzione che controlla che email e password siano corrette per effettuare l'accesso con un account</b>
-     * @param email necessaria per il controllo
-     * @param password necessaria per il controllo
+     * @param loginRequest dto che ha email e password
      * @return valore booleano, se <code>true</code> significa che email e password sono corrette, se <code>false</code> c'è stato un errore
      */
-    public boolean isStudentPresent(String email, char[] password) {
-        Optional<Studenti> tempStudent = studentiService.getStudenteByEmail(email);
+    public boolean isStudentPresent(LoginRequest loginRequest) {
+        Optional<Studenti> tempStudent = studentiService.getStudenteByEmail(loginRequest.getEmail());
         if (tempStudent.isPresent()) {
-            if (studentiService.verificaCredenziali(email, password)) {
+            if (studentiService.verificaCredenziali(loginRequest)) {
                 return true;
             } else {
                 mostraErrore("ERRORE", "Password errata");

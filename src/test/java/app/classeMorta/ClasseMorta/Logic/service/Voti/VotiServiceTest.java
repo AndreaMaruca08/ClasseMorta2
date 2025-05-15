@@ -1,4 +1,4 @@
-package app.classeMorta.ClasseMorta.Logic.Voti;
+package app.classeMorta.ClasseMorta.Logic.service.Voti;
 
 import app.classeMorta.ClasseMorta.Logic.repository.VotiRepository;
 import app.classeMorta.ClasseMorta.Logic.service.VotiService;
