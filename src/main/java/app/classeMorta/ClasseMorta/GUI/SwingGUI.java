@@ -1,18 +1,17 @@
 package app.classeMorta.ClasseMorta.GUI;
 
-import app.classeMorta.ClasseMorta.Logic.dto.LoginRequest;
-import app.classeMorta.ClasseMorta.Logic.models.Materie;
-import app.classeMorta.ClasseMorta.Logic.service.MaterieService;
-import app.classeMorta.ClasseMorta.Logic.service.MediaService;
-import app.classeMorta.ClasseMorta.Logic.service.StudentiService;
-import app.classeMorta.ClasseMorta.Logic.models.Studenti;
-import app.classeMorta.ClasseMorta.Logic.models.Voti;
-import app.classeMorta.ClasseMorta.Logic.service.VotiService;
-
+import app.classeMorta.ClasseMorta.logic.dto.LoginRequest;
+import app.classeMorta.ClasseMorta.logic.models.Materie;
+import app.classeMorta.ClasseMorta.logic.models.Studenti;
+import app.classeMorta.ClasseMorta.logic.models.Voti;
+import app.classeMorta.ClasseMorta.logic.service.MaterieService;
+import app.classeMorta.ClasseMorta.logic.service.MediaService;
+import app.classeMorta.ClasseMorta.logic.service.StudentiService;
+import app.classeMorta.ClasseMorta.logic.service.VotiService;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -24,22 +23,14 @@ import java.util.Optional;
 import static app.classeMorta.ClasseMorta.GUI.GUIUtils.*;
 
 @Component
+@RequiredArgsConstructor
 public class SwingGUI {
     private static final Logger log = LoggerFactory.getLogger(SwingGUI.class);
-    private Long id;
-
     private final StudentiService studentiService;
     private final MaterieService materieService;
     private final VotiService votiService;
     private final MediaService mediaService;
-
-    @Autowired
-    public SwingGUI(StudentiService studentiService, MaterieService materieService, VotiService votiService, MediaService mediaService) {
-        this.studentiService = studentiService;
-        this.materieService = materieService;
-        this.votiService = votiService;
-        this.mediaService = mediaService;
-    }
+    private Long id;
 
     @PostConstruct
     public void createGUI() {
@@ -143,7 +134,7 @@ public class SwingGUI {
     }
 
     /**
-     *  <b>Pagina per l'accesso con un account</b>
+     * <b>Pagina per l'accesso con un account</b>
      */
     private JPanel accediPanel(CardLayout cardLayout, JPanel panelContainer) {
         JPanel accediPanel = new JPanel();
@@ -223,7 +214,7 @@ public class SwingGUI {
     }
 
     /**
-     *<b>Pagina per la creazione di una materia</b>
+     * <b>Pagina per la creazione di una materia</b>
      */
     public JPanel creaMateria(CardLayout cardLayout, JPanel panelContainer) {
         JPanel panel = new JPanel();
@@ -234,7 +225,7 @@ public class SwingGUI {
     }
 
     /**
-     *<b>Pagina interna a una materia per vedere medie ipotetiche e voti</b>
+     * <b>Pagina interna a una materia per vedere medie ipotetiche e voti</b>
      */
     public JPanel internoMateria(CardLayout cardLayout, JPanel panelContainer, Materie materia) {
         JPanel panel = new JPanel();
@@ -280,7 +271,7 @@ public class SwingGUI {
     //SOTTO PANNELLI PER UN CODICE PIU' LEGGIBILE
 
     /**
-     *<b>Sotto pannello di <code>mainPage()</code> per mettere i bottoni per accedere ai voti delle singole materie</b>
+     * <b>Sotto pannello di <code>mainPage()</code> per mettere i bottoni per accedere ai voti delle singole materie</b>
      */
     public JPanel pannelloStampaBottoni(CardLayout cardLayout, JPanel panelContainer) {
         //stampo bottoni
@@ -346,7 +337,7 @@ public class SwingGUI {
     }
 
     /**
-     *<b>Sotto pannello di <code>internoMateria()</code> e costituisce la parte con i voti della materia</b>
+     * <b>Sotto pannello di <code>internoMateria()</code> e costituisce la parte con i voti della materia</b>
      */
     public JPanel pannelloVoti(Materie materia, CardLayout cardLayout, JPanel panelContainer) {
         JPanel panel = new JPanel();
@@ -388,7 +379,7 @@ public class SwingGUI {
     }
 
     /**
-     *<b>Sotto pannello di <code>internoMateria()</code> per far vedere la media della materia attuale e tutte le medie ipotetiche</b>
+     * <b>Sotto pannello di <code>internoMateria()</code> per far vedere la media della materia attuale e tutte le medie ipotetiche</b>
      */
     public JPanel pannelloVotiIpotetici(Materie materia) {
         JPanel panel1 = sottoPanelMedie(1, 3, 40, 80);
@@ -422,7 +413,7 @@ public class SwingGUI {
     }
 
     /**
-     *<b>Sotto pannello di <code>creaMateria()</code> per aggiungere la materia</b>
+     * <b>Sotto pannello di <code>creaMateria()</code> per aggiungere la materia</b>
      */
     public JPanel pannelloAggiuntaMateria(CardLayout cardLayout, JPanel panelContainer) {
         JPanel panel1 = sottoPanelMedie(25, 12, 50, 35);
@@ -453,7 +444,7 @@ public class SwingGUI {
     //PANELLO DI SUPPORTO
 
     /**
-     *<b>Semplice pannello per fare delle piccole zone di colore differente in modo che sia più bello</b>
+     * <b>Semplice pannello per fare delle piccole zone di colore differente in modo che sia più bello</b>
      */
     public JPanel sottoPanelMedie(int x, int y, int width, int height) {
         JPanel panel = new JPanel();
@@ -465,7 +456,8 @@ public class SwingGUI {
 
     //PANNELLI DI AGGIORNAMENTO
 
-    /** <b>Aggiorna la pagina principale</b>
+    /**
+     * <b>Aggiorna la pagina principale</b>
      */
     public void aggiornaMainPage(CardLayout cardLayout, JPanel panelContainer) {
         panelContainer.removeAll();
@@ -488,8 +480,10 @@ public class SwingGUI {
     }
 
     //FUNZIONI DI SUPPORTO
+
     /**
      * <b>Funzione che cancella una materia che si vuole</b>
+     *
      * @param materia da cancellare
      * @return valore <code>boolean</code> che restituisce vero se la materia è stata cancellata correttamente
      */
@@ -499,8 +493,10 @@ public class SwingGUI {
             return materieService.eliminaMateria(materia.getIdMateria());
         } else return false;
     }
+
     /**
      * <b>Funzione che controlla che email e password siano corrette per effettuare l'accesso con un account</b>
+     *
      * @param loginRequest dto che ha email e password
      * @return valore booleano, se <code>true</code> significa che email e password sono corrette, se <code>false</code> c'è stato un errore
      */
@@ -519,10 +515,12 @@ public class SwingGUI {
         }
 
     }
+
     /**
      * <b>Funzione che aggiunge un voto <code>Voti</code> a uno studente in una specifica materia</b>
-     * @param voto da mettere
-     * @param materia alla quale aggiungere il voto
+     *
+     * @param voto     da mettere
+     * @param materia  alla quale aggiungere il voto
      * @param studenti alla quale appartiene il voto
      */
     public void aggiungiVoto(Float voto, Materie materia, Studenti studenti) {
@@ -531,6 +529,7 @@ public class SwingGUI {
 
     /**
      * <b>Funzione che cancella un voto </b>
+     *
      * @param voto da cancellare
      * @return valore <code>boolean</code>, se <code>true</code> vuol dire che è andato tutto a buon fine
      */

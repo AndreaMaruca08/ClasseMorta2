@@ -70,7 +70,7 @@ public class CerchioMedia extends JPanel {
         grafica.drawString(testo, (getWidth() - textWidth) / 2 - 27, getHeight() / 2 - 5);
 
         // Testo del messaggio (ridimensionato)
-        int maxLabelWidth = (int)(size * 0.8); // massimo 80% del cerchio
+        int maxLabelWidth = (int) (size * 0.8); // massimo 80% del cerchio
         int fontSize = 20;
         Font labelFont;
         FontMetrics labelFm;
@@ -85,6 +85,6 @@ public class CerchioMedia extends JPanel {
 
         grafica.setFont(labelFont);
         int labelWidth = labelFm.stringWidth(messaggio);
-        grafica.drawString(messaggio, (getWidth() - labelWidth) / 2 - 27, getHeight() / 2 + textHeight -15);
+        grafica.drawString(messaggio, (getWidth() - labelWidth) / 2 - 27, getHeight() / 2 + textHeight - 15);
     }
 }

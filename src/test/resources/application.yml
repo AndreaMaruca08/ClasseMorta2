@@ -8,6 +8,10 @@ spring:
       ddl-auto: create-drop
     show-sql: true
 
+logging:
+  level:
+    app.classeMorta: trace
+
 #logging:
 #  level:
 #    org:
