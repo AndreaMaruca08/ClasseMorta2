@@ -501,7 +501,7 @@ public class SwingGUI {
      * @return valore booleano, se <code>true</code> significa che email e password sono corrette, se <code>false</code> c'è stato un errore
      */
     public boolean isStudentPresent(LoginRequest loginRequest) {
-        Optional<Studenti> tempStudent = studentiService.getStudenteByEmail(loginRequest.getEmail());
+        Optional<Studenti> tempStudent = studentiService.getStudenteByEmail(loginRequest.email());
         if (tempStudent.isPresent()) {
             if (studentiService.verificaCredenziali(loginRequest)) {
                 return true;

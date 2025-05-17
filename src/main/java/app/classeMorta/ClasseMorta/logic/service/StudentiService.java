@@ -25,11 +25,11 @@ public class StudentiService {
     }
 
     public boolean verificaCredenziali(LoginRequest loginRequest) {
-        Optional<Studenti> studentiOpt = studentiRepository.findByEmail(loginRequest.getEmail());
+        Optional<Studenti> studentiOpt = studentiRepository.findByEmail(loginRequest.email());
 
         if (studentiOpt.isPresent()) {
             Studenti utente = studentiOpt.get();
-            return Arrays.equals(utente.getPassword(), loginRequest.getPassword()); // (NON SICURO)
+            return Arrays.equals(utente.getPassword(), loginRequest.password()); // (NON SICURO)
         }
 
         return false;
