@@ -1,4 +1,4 @@
-package app.classeMorta.ClasseMorta.logic.service.Voti;
+package app.classeMorta.ClasseMorta.logic.service;
 
 import app.classeMorta.ClasseMorta.logic.models.Materie;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
@@ -6,7 +6,6 @@ import app.classeMorta.ClasseMorta.logic.models.Voti;
 import app.classeMorta.ClasseMorta.logic.repository.MaterieRepository;
 import app.classeMorta.ClasseMorta.logic.repository.StudentiRepository;
 import app.classeMorta.ClasseMorta.logic.repository.VotiRepository;
-import app.classeMorta.ClasseMorta.logic.service.VotiService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -37,11 +36,12 @@ public class VotiServiceTest {
     @Test
     @Transactional
     void testGetVotiPerMateriaEID() {
+
         //creazione di uno studente, materia e voto provvisorio
         var studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
         studentiRepository.save(studente);
 
-        var materia = new Materie("info");
+        var materia = new Materie("info", studente);
         materieRepository.save(materia);
 
         var voto = new Voti(7.5F, studente, materia, LocalDate.now());

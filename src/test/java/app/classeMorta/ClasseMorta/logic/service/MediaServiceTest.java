@@ -1,12 +1,12 @@
-package app.classeMorta.ClasseMorta.logic.service.Media;
+package app.classeMorta.ClasseMorta.logic.service;
 
+import app.classeMorta.ClasseMorta.logic.dto.MediaRequest;
 import app.classeMorta.ClasseMorta.logic.models.Materie;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
 import app.classeMorta.ClasseMorta.logic.models.Voti;
 import app.classeMorta.ClasseMorta.logic.repository.MaterieRepository;
 import app.classeMorta.ClasseMorta.logic.repository.StudentiRepository;
 import app.classeMorta.ClasseMorta.logic.repository.VotiRepository;
-import app.classeMorta.ClasseMorta.logic.service.MediaService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,7 +44,7 @@ public class MediaServiceTest {
 
         //salvo in h2
         studentiRepository.save(studente);
-        Materie materia = new Materie("info");
+        Materie materia = new Materie("info", studente);
         materieRepository.save(materia);
 
         //creo 2 voti provvisori
@@ -60,7 +60,8 @@ public class MediaServiceTest {
         float mediaManuale = 19F / listaManuale.size();
 
         //controllo che la media a mano sia uguale a quella fatta con la funzione
-        assertEquals(mediaManuale, mediaService.calcolaMediaPerMateria(materia.getIdMateria(), studente.getId(), 7));
+        MediaRequest mediaRequest = new MediaRequest(materia.getIdMateria(), studente.getId(), 7);
+        assertEquals(mediaManuale, mediaService.calcolaMediaPerMateria(mediaRequest));
 
     }
 
@@ -73,9 +74,9 @@ public class MediaServiceTest {
         studentiRepository.save(studente);
 
         //materie
-        Materie materia = new Materie("info");
+        Materie materia = new Materie("info", studente);
         materieRepository.save(materia);
-        Materie materia1 = new Materie("storia");
+        Materie materia1 = new Materie("storia", studente);
         materieRepository.save(materia1);
 
         //creo 2 voti provvisori

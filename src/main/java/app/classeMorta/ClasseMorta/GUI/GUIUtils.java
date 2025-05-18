@@ -15,10 +15,10 @@ public class GUIUtils {
      * <b>Funzioni per la creazione di componenti Swing come:
      * <br><code>JLabel, JTextArea, JButton, JPasswordField</code></b>
      */
-    public static JLabel creaLabel(String messaggio, int percX, int percY, int percWidth, int percHeight, int fontSize) {
+    public static JLabel creaLabel(String messaggio, int percX, int percY, int percWidth, int percHeight, int fontSize, Color colore) {
         JLabel label = new JLabel(messaggio);
         label.setFont(new Font("Arial", Font.ITALIC, fontSize));
-        label.setForeground(Color.black);
+        label.setForeground(colore);
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setBounds(getX(percX), getY(percY), getX(percWidth), getY(percHeight));
         label.addComponentListener(new ComponentAdapter() {

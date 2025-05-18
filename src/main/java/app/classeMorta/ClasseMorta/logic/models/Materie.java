@@ -20,10 +20,15 @@ public class Materie {
     @Column(nullable = false)
     private String nomeMateria;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_studente", referencedColumnName = "id")
+    private Studenti studente;
+
     @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Voti> voti;
 
-    public Materie(String nomeMateria) {
+    public Materie(String nomeMateria, Studenti studente) {
         this.nomeMateria = nomeMateria;
+        this.studente = studente;
     }
 }

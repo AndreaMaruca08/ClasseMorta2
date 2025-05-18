@@ -10,7 +10,7 @@ public class CerchioMedia extends JPanel {
     private final String messaggio;
     private double animazioneMedia = 0.000;
 
-    public CerchioMedia(double media, int thickness, String messaggio) {
+    public CerchioMedia(double media, int thickness, String messaggio, Color colore) {
         this.media = media;
         this.thickness = thickness;
         this.messaggio = messaggio;
@@ -25,7 +25,7 @@ public class CerchioMedia extends JPanel {
                 repaint();
                 ((Timer) e.getSource()).stop();
             }
-            this.setBackground(new Color(170, 60, 70));
+            this.setBackground(colore);
         });
 
         timer.start();

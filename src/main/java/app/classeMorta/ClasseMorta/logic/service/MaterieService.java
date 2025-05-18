@@ -1,6 +1,7 @@
 package app.classeMorta.ClasseMorta.logic.service;
 
 import app.classeMorta.ClasseMorta.logic.models.Materie;
+import app.classeMorta.ClasseMorta.logic.models.Studenti;
 import app.classeMorta.ClasseMorta.logic.repository.MaterieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,21 +17,23 @@ public class MaterieService {
         this.materieRepository = materieRepository;
     }
 
-    public List<Materie> getAllMaterie() {
-        return materieRepository.findAll();
+    public Materie getMateriaByID(Long id) {return materieRepository.getReferenceById(id);}
+
+    public List<Materie> getAllMaterie(Studenti studente) {
+        return materieRepository.findAllByStudente(studente);
     }
 
-    public void saveMateria(String nomeMateria) {
+    public void saveMateria(String nomeMateria, Studenti studente) {
         try {
-            Materie newMateria = new Materie(nomeMateria);
+            Materie newMateria = new Materie(nomeMateria, studente);
             materieRepository.save(newMateria);
         } catch (Exception e) {
             System.out.println("ERRORE in 'salvaMateria' in MateriaService");
         }
     }
 
-    public boolean existByName(String nomeMateria) {
-        return materieRepository.existsByNomeMateria(nomeMateria);
+    public boolean existByName(String nomeMateria, Studenti studente) {
+        return materieRepository.existsByNomeMateriaAndStudente(nomeMateria, studente);
     }
 
     public boolean eliminaMateria(Long idMateria) {

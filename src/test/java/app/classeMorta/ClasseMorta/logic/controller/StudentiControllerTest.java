@@ -1,4 +1,4 @@
-package app.classeMorta.ClasseMorta.logic.controller.studenti;
+package app.classeMorta.ClasseMorta.logic.controller;
 
 import app.classeMorta.ClasseMorta.logic.dto.LoginRequest;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
@@ -107,7 +107,7 @@ public class StudentiControllerTest {
     @Test
     void testIsEmailUsed_error() throws Exception{
         mockMvc.perform(get("/studenti/email-used")
-                        .param("email", "test") //passa la email
+                        .param("email", "testErrore") //passa la email
                         .accept(MediaType.APPLICATION_JSON)            //passo in formato json
                 )
                 .andExpect(status().isNotFound())
@@ -117,8 +117,9 @@ public class StudentiControllerTest {
                 .andExpect(jsonPath("$.message.message").value("Email non utilizzata"));
     }
 
+    //test per salvare studente
     @Test
-    void testSalvaStudente()throws Exception{
+    void testSalvaStudente()throws Exception {
         var studente = new Studenti("test", "test@gmail.com", "test".toCharArray());
 
         mockMvc.perform(post("/studenti/saveStudente")

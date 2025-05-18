@@ -1,6 +1,7 @@
 package app.classeMorta.ClasseMorta.GUI;
 
 import app.classeMorta.ClasseMorta.logic.dto.LoginRequest;
+import app.classeMorta.ClasseMorta.logic.dto.MediaRequest;
 import app.classeMorta.ClasseMorta.logic.models.Materie;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
 import app.classeMorta.ClasseMorta.logic.models.Voti;
@@ -18,10 +19,32 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static app.classeMorta.ClasseMorta.GUI.GUIUtils.*;
-
+/**
+ * La classe {@code SwingGUI} si occupa della creazione e gestione dell'interfaccia grafica (GUI)
+ * per un'applicazione di gestione studenti utilizzando Swing.
+ * <p>
+ * Responsabilità principali:
+ * <ul>
+ *     <li>Gestisce i diversi pannelli dell'interfaccia dell'applicazione, tra cui login, elenco materie, gestione voti e statistiche.</li>
+ *     <li>Fornisce funzionalità per la navigazione tra le sezioni dell'applicazione.</li>
+ *     <li>Si occupa dell'interazione con le logiche di business relative agli studenti, materie e voti, compreso il calcolo delle medie.</li>
+ *     <li>Gestisce la logica di logging per attività ed errori applicativi.</li>
+ * </ul>
+ *
+ * <b>Campi principali:</b>
+ * <ul>
+ *     <li>{@code Logger log} – Logger utilizzato per debug e logging delle attività.</li>
+ *     <li>{@code StudentiService studentiService} – Service per la gestione degli studenti.</li>
+ *     <li>{@code MaterieService materieService} – Service per la gestione delle materie.</li>
+ *     <li>{@code VotiService votiService} – Service per la gestione dei voti.</li>
+ *     <li>{@code MediaService mediaService} – Service per il calcolo delle medie.</li>
+ *     <li>{@code String id} – Identificativo sessione o utente corrente.</li>
+ * </ul>
+ */
 @Component
 @RequiredArgsConstructor
 public class SwingGUI {
@@ -31,6 +54,10 @@ public class SwingGUI {
     private final VotiService votiService;
     private final MediaService mediaService;
     private Long id;
+
+    private Color coloreMain = new Color(171, 89, 106);
+    private Color coloreSecondario = new Color(170, 60, 70);
+    private Color coloreTesto = new Color(0,0,0);
 
     @PostConstruct
     public void createGUI() {
@@ -53,11 +80,13 @@ public class SwingGUI {
                     System.err.println("Impossibile impostare l'icona del Dock: " + e.getMessage());
                 }
             }
+
             try {
-                UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel"); // Imposta Nimbus
+                UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
             } catch (Exception e) {
                 System.out.println("ERRORE : errore nello style");
             }
+
             Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
             int screenWidth = screenSize.width;
             int screenHeight = screenSize.height;
@@ -75,7 +104,6 @@ public class SwingGUI {
             panelContainer.add(accediPanel(cardLayout, panelContainer), "accesso");
             panelContainer.add(creaPanel(cardLayout, panelContainer), "crea");
 
-            // Icona
             ImageIcon icon1 = new ImageIcon("src/main/java/img/icona.png");
             frame.setIconImage(icon1.getImage());
             frame.add(panelContainer);
@@ -84,23 +112,17 @@ public class SwingGUI {
         });
     }
 
-    //PAGINE EFFETTIVE
-
-    /**
-     * <b>Pagina per la creazione di un account</b>
-     */
+    //pagine vere e proprie
     private JPanel creaPanel(CardLayout cardLayout, JPanel panelContainer) {
         JPanel creaPanel = new JPanel();
         creaPanel.setLayout(null);
         creaPanel.setBounds(0, 0, getX(100), getY(100));
-        creaPanel.setBackground(new Color(171, 89, 106));
+        creaPanel.setBackground(coloreMain);
 
-        // Componenti GUI
-        creaPanel.add(creaLabel("Benvenuto su ClasseMorta2", 30, 15, 40, 5, 30));
-
-        creaPanel.add(creaLabel("Nome", 30, 25, 10, 5, 18));
-        creaPanel.add(creaLabel("Email : ", 30, 30, 10, 5, 18));
-        creaPanel.add(creaLabel("Password : ", 30, 35, 10, 5, 18));
+        creaPanel.add(creaLabel("Benvenuto su ClasseMorta2", 30, 15, 40, 5, 30, coloreTesto));
+        creaPanel.add(creaLabel("Nome", 30, 25, 10, 5, 18, coloreTesto));
+        creaPanel.add(creaLabel("Email : ", 30, 30, 10, 5, 18, coloreTesto));
+        creaPanel.add(creaLabel("Password : ", 30, 35, 10, 5, 18,coloreTesto));
 
         JTextArea areaNome = creaArea("inserisci qui il tuo Nome", 45, 25, 20, 5, 18);
         JTextArea areaEmail = creaArea("inserisci qui la Email ", 45, 30, 20, 5, 18);
@@ -113,8 +135,16 @@ public class SwingGUI {
         esci.addActionListener(_ -> System.exit(0));
         creaAccount.addActionListener(_ -> {
             try {
-                if (!studentiService.isEmailUsed(areaEmail.getText())) {
-                    studentiService.salvaStudente(areaNome.getText(), areaEmail.getText(), (areaPassword.getPassword()));
+                if (!studentiService.isEmailUsed(areaEmail.getText().trim())) {
+                    char[] rawPassword = areaPassword.getPassword();
+                    // Conversione da char[] a String
+                    String passwordString = new String(rawPassword);
+                    // trim della stringa
+                    passwordString = passwordString.trim();
+                    // Se ti serve ancora come char[], fai così:
+                    char[] trimmedPassword = passwordString.toCharArray();
+
+                    studentiService.salvaStudente(areaNome.getText().trim(), areaEmail.getText().trim(), trimmedPassword);
                     mostraInformazioni("SUCCESSO", "Account creato con successo");
                 }
             } catch (Exception e) {
@@ -133,18 +163,15 @@ public class SwingGUI {
         return creaPanel;
     }
 
-    /**
-     * <b>Pagina per l'accesso con un account</b>
-     */
     private JPanel accediPanel(CardLayout cardLayout, JPanel panelContainer) {
         JPanel accediPanel = new JPanel();
         accediPanel.setLayout(null);
         accediPanel.setBounds(0, 0, getX(100), getY(100));
-        accediPanel.setBackground(new Color(171, 89, 106));
-        // Componenti GUI
-        accediPanel.add(creaLabel("Bentornato su ClasseMorta2", 30, 15, 40, 5, 30));
-        accediPanel.add(creaLabel("email : ", 30, 25, 10, 5, 18));
-        accediPanel.add(creaLabel("password : ", 30, 30, 10, 5, 18));
+        accediPanel.setBackground(coloreMain);
+
+        accediPanel.add(creaLabel("Bentornato su ClasseMorta2", 30, 15, 40, 5, 30, coloreTesto));
+        accediPanel.add(creaLabel("email : ", 30, 25, 10, 5, 18, coloreTesto));
+        accediPanel.add(creaLabel("password : ", 30, 30, 10, 5, 18, coloreTesto));
 
         JTextArea areaEmail = creaArea("inserisci qui la Email ", 45, 25, 20, 5, 18);
         JPasswordField areaPassword = creaPassField(45, 30, 20, 5, 18);
@@ -154,27 +181,24 @@ public class SwingGUI {
         JButton esci = creabottone("ESCI", 90, 82, 10, 10, 18);
         esci.addActionListener(_ -> System.exit(0));
 
-        //uso di try catch siccome si gestisce l'input
         try {
             accedi.addActionListener(_ -> {
-
                 String email = areaEmail.getText();
                 char[] password = areaPassword.getPassword();
                 LoginRequest loginRequest = new LoginRequest(email, password);
                 if (isStudentPresent(loginRequest)) {
                     id = studentiService.getStudentIdByEmail(email);
-
                     panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
                     panelContainer.add(mainPage(mediaService.calcolaMediaTot(id), cardLayout, panelContainer), "main");
                     cardLayout.show(panelContainer, "main");
                 }
-
             });
         } catch (NullPointerException e) {
             log.info("ERRORE : errore nel caricamento dei dati in accedi : NullPointerException ");
         } catch (Exception e) {
             log.info("ERRORE in accedi ");
         }
+
         creazione.addActionListener(_ -> cardLayout.show(panelContainer, "crea"));
 
         accediPanel.add(areaEmail);
@@ -186,23 +210,35 @@ public class SwingGUI {
         return accediPanel;
     }
 
-    /**
-     * <b>Pagina principale, contiene tutte le medie e gli accessi alle materie</b>
-     */
     public JPanel mainPage(Float mediaTotale, CardLayout cardLayout, JPanel panelContainer) {
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(0, 0, getX(100), getY(100));
-        panel.setBackground(new Color(171, 89, 106));
-        //aggiunta del pannello per le medie
+        panel.setBackground(coloreMain);
+
         panel.add(pannelloStampaMedie(mediaTotale, cardLayout, panelContainer));
-        //aggiunta del pannello per i bottoni per accedere alle materie
         panel.add(pannelloStampaBottoni(cardLayout, panelContainer));
-        //bottone per aggiungere materia
+
         JButton aggiungiMateria = creabottone("Aggiungi Materia", 40, 3, 20, 5, 20);
         aggiungiMateria.addActionListener(_ -> cardLayout.show(panelContainer, "aggiungiMateria"));
         panel.add(aggiungiMateria);
-        //bottone per disconnettersi
+
+        JButton tema = creabottone("Cambia tema", 0, 0, 10, 5, 15);
+        tema.addActionListener(_ -> {
+            if(!Objects.equals(coloreMain, new Color(0, 0, 0))) {
+                coloreMain = new Color(0,0,0);
+                coloreSecondario = Color.darkGray;
+                coloreTesto = Color.white;
+            }
+            else{
+                coloreMain = new Color(171, 89, 106);
+                coloreSecondario = new Color(170, 60, 70);
+                coloreTesto = Color.black;
+            }
+            aggiornaMainPage(cardLayout, panelContainer);
+        });
+        panel.add(tema);
+
         JButton disconnetti = creabottone("Disconnetti", 80, 80, 20, 10, 20);
         disconnetti.addActionListener(_ -> {
             panelContainer.add(accediPanel(cardLayout, panelContainer), "accesso");
@@ -213,48 +249,41 @@ public class SwingGUI {
         return panel;
     }
 
-    /**
-     * <b>Pagina per la creazione di una materia</b>
-     */
     public JPanel creaMateria(CardLayout cardLayout, JPanel panelContainer) {
         JPanel panel = new JPanel();
         panel.setLayout(null);
-        panel.setBackground(new Color(171, 89, 106));
+        panel.setBackground(coloreMain);
         panel.add(pannelloAggiuntaMateria(cardLayout, panelContainer));
         return panel;
     }
 
-    /**
-     * <b>Pagina interna a una materia per vedere medie ipotetiche e voti</b>
-     */
     public JPanel internoMateria(CardLayout cardLayout, JPanel panelContainer, Materie materia) {
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(0, 0, getX(100), getY(100));
-        panel.setBackground(new Color(171, 89, 106));
+        panel.setBackground(coloreMain);
 
-        panel.add(creaLabel(materia.getNomeMateria(), 0, 0, 100, 10, 35));
+        panel.add(creaLabel(materia.getNomeMateria(), 0, 0, 100, 10, 35, coloreTesto));
+
         JButton ritorno = creabottone("Ritorna", 0, 85, 10, 5, 18);
         ritorno.addActionListener(_ -> {
             aggiornaMainPage(cardLayout, panelContainer);
             cardLayout.show(panelContainer, "main");
         });
         panel.add(ritorno);
-        //aggiunta del pannello per vedere le medie ipotetiche
+
         panel.add(pannelloVotiIpotetici(materia));
-        //voti attuali
         panel.add(pannelloVoti(materia, cardLayout, panelContainer));
 
-        //menù per la selezione del voto
         Float[] voti = {
-                (float) 0.0, (float) 0.5, (float) 1, (float) 1.5, (float) 2, (float) 2.5,
-                (float) 3, (float) 3.5, (float) 4, (float) 4.5, (float) 5, (float) 5.5, (float) 6,
-                (float) 6.5, (float) 7, (float) 7.5, (float) 8, (float) 8.5, (float) 9, (float) 9.5, (float) 10
+                0.0f, 0.5f, 1.0f, 1.5f, 2.0f, 2.5f,
+                3.0f, 3.5f, 4.0f, 4.5f, 5.0f, 5.5f, 6.0f,
+                6.5f, 7.0f, 7.5f, 8.0f, 8.5f, 9.0f, 9.5f, 10.0f
         };
-        JComboBox<Float> comboBox = new JComboBox<>(voti);
-        comboBox.setBounds(getX(60), getY(5), getX(9), getY(6)); // Posizione e dimensione
 
-        //bottone per aggiungere voto
+        JComboBox<Float> comboBox = new JComboBox<>(voti);
+        comboBox.setBounds(getX(60), getY(5), getX(9), getY(6));
+
         JButton aggiungiVoto = creabottone("Aggiungi Voto", 70, 5, 20, 7, 20);
         aggiungiVoto.addActionListener(_ -> {
             Float voto = (Float) comboBox.getSelectedItem();
@@ -268,164 +297,164 @@ public class SwingGUI {
         return panel;
     }
 
-    //SOTTO PANNELLI PER UN CODICE PIU' LEGGIBILE
-
-    /**
-     * <b>Sotto pannello di <code>mainPage()</code> per mettere i bottoni per accedere ai voti delle singole materie</b>
-     */
+    //sotto pannelli
     public JPanel pannelloStampaBottoni(CardLayout cardLayout, JPanel panelContainer) {
-        //stampo bottoni
         JPanel panel2 = sottoPanelMedie(40, 10, 60, 70);
         int xBtn = 5, yBtn = 5, j = 0;
-        for (Materie materia : materieService.getAllMaterie()) {
+
+
+
+        for (Materie materia : materieService.getAllMaterie(studentiService.getStudenteByID(id))) {
             if (j == 4) {
                 j = 0;
                 xBtn = 5;
                 yBtn += 13;
             }
+
             JButton bottone = creabottone(materia.getNomeMateria(), xBtn, yBtn, 10, 5, 20);
             bottone.addActionListener(_ -> {
                 panelContainer.add(internoMateria(cardLayout, panelContainer, materia), "interno");
                 cardLayout.show(panelContainer, "interno");
             });
             panel2.add(bottone);
+
             xBtn += 11;
             j++;
         }
         return panel2;
     }
 
-    /**
-     * <b>Sotto pannello di <code>mainPage()</code> per far vedere le medie, quella totale e quelle delle singole materie </b>
-     */
     public JPanel pannelloStampaMedie(double mediaTotale, CardLayout cardLayout, JPanel panelContainer) {
-        //stampo delle medie
         JPanel panel1 = sottoPanelMedie(5, 5, 33, 75);
         panel1.setLayout(null);
-        CerchioMedia cerchioMedia = new CerchioMedia(mediaTotale, 14, "Media");
+
+        CerchioMedia cerchioMedia = new CerchioMedia(mediaTotale, 14, "Media", coloreSecondario);
         cerchioMedia.setBounds(getX(14), getY(5), getX(10), getY(10));
         panel1.add(cerchioMedia);
+
         int x = 2, y = 20, i = 0;
-        for (Materie materia : materieService.getAllMaterie()) {
-            Float mediaMateria = mediaService.calcolaMediaPerMateria(materia.getIdMateria(), id);
+        for (Materie materia : materieService.getAllMaterie(studentiService.getStudenteByID(id))) {
+            MediaRequest mediaRequest = new MediaRequest(materia.getIdMateria(), id, -1);
+            float mediaMateria = mediaService.calcolaMediaPerMateria(mediaRequest);
+
             if (i == 3) {
                 i = 0;
                 x = 2;
                 y += 13;
             }
-            CerchioMedia cerchioMediaPiccolo = new CerchioMedia(mediaMateria, 14, materia.getNomeMateria());
+
+            CerchioMedia cerchioMediaPiccolo = new CerchioMedia(mediaMateria, 14, materia.getNomeMateria(), coloreSecondario);
             cerchioMediaPiccolo.setBounds(getX(x), getY(y), getX(10), getY(10));
+
             JButton cancella = creabottone("", x - 2, y, 2, 4, 3);
             cancella.addActionListener(_ -> {
-                if (cancellaMateria(materia))
-                    mostraErrore("ERRORE", "errore nella cancellazione, materia non esistente");
-                else
+                if (cancellaMateria(materia)) {
                     aggiornaMainPage(cardLayout, panelContainer);
+                } else {
+                    mostraErrore("ERRORE", "errore nella cancellazione, materia non esistente");
+                }
             });
             cancella.setForeground(Color.white);
-            cancella.setBackground(Color.black);
-            //aggiunte
+            cancella.setBackground(Color.gray);
+
             panel1.add(cancella);
             panel1.add(cerchioMediaPiccolo);
             x += 12;
             i++;
         }
-        //messaggi
-        panel1.add(creaLabel("Media totale", 12, -3, 10, 10, 25));
-        panel1.add(creaLabel("Medie materie", 12, 13, 10, 10, 22));
+
+        panel1.add(creaLabel("Media totale", 12, -3, 10, 10, 25, coloreTesto));
+        panel1.add(creaLabel("Medie materie", 12, 13, 10, 10, 22, coloreTesto));
         return panel1;
     }
 
-    /**
-     * <b>Sotto pannello di <code>internoMateria()</code> e costituisce la parte con i voti della materia</b>
-     */
     public JPanel pannelloVoti(Materie materia, CardLayout cardLayout, JPanel panelContainer) {
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(getX(45), getY(15), getX(50), getY(68));
-        panel.setBackground(new Color(170, 60, 70));
+        panel.setBackground(coloreSecondario);
 
-        //stampa media Ipotetica
         int x = 2, y = 8, i = 0;
         List<Voti> listaVoti = votiService.getVotiPerMateriaEID(materia.getIdMateria(), id);
+
         for (Voti voto : listaVoti) {
-            //aumenti
             if (i == 4) {
                 i = 0;
                 x = 2;
                 y += 10;
             }
+
             JButton cancella = creabottone("", x - 2, y, 2, 4, 3);
             cancella.addActionListener(_ -> {
-                if (cancellaVoto(voto))
-                    mostraErrore("ERRORE", "errore nella cancellazione, voto non esistente");
-                else
+                if (cancellaVoto(voto)) {
                     aggiornaPaginaMateria(cardLayout, panelContainer, materia);
+                } else {
+                    mostraErrore("ERRORE", "errore nella cancellazione, voto non esistente");
+                }
             });
             cancella.setForeground(Color.white);
             cancella.setBackground(Color.black);
-            //aggiunte
+
             panel.add(cancella);
-            CerchioMedia cerchioMediaIp = new CerchioMedia(voto.getVoto(), 14, "" + voto.getData());
+
+            CerchioMedia cerchioMediaIp = new CerchioMedia(voto.getVoto(), 14, "" + voto.getData(), coloreSecondario);
             cerchioMediaIp.setBounds(getX(x), getY(y), getX(10), getY(10));
             panel.add(cerchioMediaIp);
 
             i++;
             x += 12;
         }
-        panel.add(creaLabel("Voti (dal più vecchio)", -5, -2, 30, 10, 25));
 
+        panel.add(creaLabel("Voti (dal più vecchio)", -5, -2, 30, 10, 25, coloreTesto));
         return panel;
     }
 
-    /**
-     * <b>Sotto pannello di <code>internoMateria()</code> per far vedere la media della materia attuale e tutte le medie ipotetiche</b>
-     */
     public JPanel pannelloVotiIpotetici(Materie materia) {
         JPanel panel1 = sottoPanelMedie(1, 3, 40, 80);
-        Float mediaMat = mediaService.calcolaMediaPerMateria(materia.getIdMateria(), id);
-        CerchioMedia cerchioMedia = new CerchioMedia(mediaMat, 14, "Media");
+        float mediaMat = mediaService.calcolaMediaPerMateria(new MediaRequest(materia.getIdMateria(), id, -1));
+
+        CerchioMedia cerchioMedia = new CerchioMedia(mediaMat, 14, "Media", coloreSecondario);
         cerchioMedia.setBounds(getX(5), getY(5), getX(10), getY(10));
         panel1.add(cerchioMedia);
 
-        //stampa media Ipotetica
         int x = 2, y = 20;
         float votoIpotetico = 0.0F;
+
         for (int i = 0, j = 0; i < 21; i++, j++) {
-            //aumenti
             if (j == 4) {
                 j = 0;
                 x = 2;
                 y += 10;
             }
-            mediaMat = mediaService.calcolaMediaPerMateria(materia.getIdMateria(), id, votoIpotetico);
-            CerchioMedia cerchioMediaIp = new CerchioMedia(mediaMat, 14, "Media con " + votoIpotetico);
+
+            MediaRequest mediaRequest = new MediaRequest(materia.getIdMateria(), id, votoIpotetico);
+            mediaMat = mediaService.calcolaMediaPerMateria(mediaRequest);
+
+            CerchioMedia cerchioMediaIp = new CerchioMedia(mediaMat, 14, "Media con " + votoIpotetico, coloreSecondario);
             cerchioMediaIp.setBounds(getX(x), getY(y), getX(10), getY(10));
             votoIpotetico += 0.5F;
             panel1.add(cerchioMediaIp);
 
-
             x += 10;
         }
-        panel1.add(creaLabel("Medie ipotetiche", -1, 12, 20, 10, 25));
-        panel1.add(creaLabel("Media " + materia.getNomeMateria(), -1, -3, 20, 10, 25));
+
+        panel1.add(creaLabel("Medie ipotetiche", -1, 12, 20, 10, 25, coloreTesto));
+        panel1.add(creaLabel("Media " + materia.getNomeMateria(), -1, -3, 20, 10, 25, coloreTesto));
         return panel1;
     }
 
-    /**
-     * <b>Sotto pannello di <code>creaMateria()</code> per aggiungere la materia</b>
-     */
     public JPanel pannelloAggiuntaMateria(CardLayout cardLayout, JPanel panelContainer) {
         JPanel panel1 = sottoPanelMedie(25, 12, 50, 35);
-        panel1.add(creaLabel("Aggiungi materia", 5, 5, 40, 5, 30));
-        panel1.add(creaLabel("Nome della materia:", 5, 15, 15, 5, 20));
+        panel1.add(creaLabel("Aggiungi materia", 5, 5, 40, 5, 30, coloreTesto));
+        panel1.add(creaLabel("Nome della materia:", 5, 15, 15, 5, 20, coloreTesto));
+
         JTextArea areaNome = creaArea("NomeMateria", 21, 15, 20, 5, 20);
         JButton button = creabottone("Aggiungi", 5, 20, 35, 5, 18);
         button.addActionListener(_ -> {
-            if (materieService.existByName(areaNome.getText())) {
+            if (materieService.existByName(areaNome.getText().trim(),studentiService.getStudenteByID(id))) {
                 mostraErrore("ERRORE", "Materia già esistente");
             } else {
-                materieService.saveMateria(areaNome.getText());
+                materieService.saveMateria(areaNome.getText().trim(), studentiService.getStudenteByID(id));
             }
         });
 
@@ -441,24 +470,15 @@ public class SwingGUI {
         return panel1;
     }
 
-    //PANELLO DI SUPPORTO
-
-    /**
-     * <b>Semplice pannello per fare delle piccole zone di colore differente in modo che sia più bello</b>
-     */
     public JPanel sottoPanelMedie(int x, int y, int width, int height) {
         JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBounds(getX(x), getY(y), getX(width), getY(height));
-        panel.setBackground(new Color(170, 60, 70));
+        panel.setBackground(coloreSecondario);
         return panel;
     }
 
-    //PANNELLI DI AGGIORNAMENTO
-
-    /**
-     * <b>Aggiorna la pagina principale</b>
-     */
+    //funzioni per aggiornare le pagine
     public void aggiornaMainPage(CardLayout cardLayout, JPanel panelContainer) {
         panelContainer.removeAll();
         panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
@@ -467,9 +487,6 @@ public class SwingGUI {
         cardLayout.show(panelContainer, "main");
     }
 
-    /**
-     * <b>Aggiorna la pagina delle materie</b>
-     */
     public void aggiornaPaginaMateria(CardLayout cardLayout, JPanel panelContainer, Materie materia) {
         panelContainer.removeAll();
         panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
@@ -479,65 +496,37 @@ public class SwingGUI {
         cardLayout.show(panelContainer, "interno");
     }
 
-    //FUNZIONI DI SUPPORTO
-
-    /**
-     * <b>Funzione che cancella una materia che si vuole</b>
-     *
-     * @param materia da cancellare
-     * @return valore <code>boolean</code> che restituisce vero se la materia è stata cancellata correttamente
-     */
+    //funzioni di supporto
     public boolean cancellaMateria(Materie materia) {
         log.info("cancello materia");
         if (sceltaYN("cancellare", "Vuoi davvero cancellare questa Materia?") == 0) {
             return materieService.eliminaMateria(materia.getIdMateria());
-        } else return false;
+        }
+        return false;
     }
 
-    /**
-     * <b>Funzione che controlla che email e password siano corrette per effettuare l'accesso con un account</b>
-     *
-     * @param loginRequest dto che ha email e password
-     * @return valore booleano, se <code>true</code> significa che email e password sono corrette, se <code>false</code> c'è stato un errore
-     */
     public boolean isStudentPresent(LoginRequest loginRequest) {
         Optional<Studenti> tempStudent = studentiService.getStudenteByEmail(loginRequest.email());
         if (tempStudent.isPresent()) {
             if (studentiService.verificaCredenziali(loginRequest)) {
                 return true;
-            } else {
-                mostraErrore("ERRORE", "Password errata");
-                return false;
             }
-        } else {
-            mostraErrore("ERRORE", "Utente non esistente");
+            mostraErrore("ERRORE", "Password errata");
             return false;
         }
-
+        mostraErrore("ERRORE", "Utente non esistente");
+        return false;
     }
 
-    /**
-     * <b>Funzione che aggiunge un voto <code>Voti</code> a uno studente in una specifica materia</b>
-     *
-     * @param voto     da mettere
-     * @param materia  alla quale aggiungere il voto
-     * @param studenti alla quale appartiene il voto
-     */
     public void aggiungiVoto(Float voto, Materie materia, Studenti studenti) {
         votiService.salvaVoto(voto, materia, studenti);
     }
 
-    /**
-     * <b>Funzione che cancella un voto </b>
-     *
-     * @param voto da cancellare
-     * @return valore <code>boolean</code>, se <code>true</code> vuol dire che è andato tutto a buon fine
-     */
     public boolean cancellaVoto(Voti voto) {
-        if (sceltaYN("cancellare", "Vuoi davvero cancellare questo Voto?") == 0) {
+        int scelta = sceltaYN("cancellare", "Vuoi davvero cancellare questo Voto?");
+        if (scelta == 0) {
             return votiService.cancellaVoto(voto.getVotoID());
-        } else return false;
+        }
+        return false;
     }
-
 }
-

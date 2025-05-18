@@ -1,9 +1,9 @@
 package app.classeMorta.ClasseMorta.logic.controller;
 
-import app.classeMorta.ClasseMorta.logic.ConditionalResponseEntity;
+import app.classeMorta.ClasseMorta.logic.dto.ConditionalResponseEntity;
 import app.classeMorta.ClasseMorta.logic.dto.EmailFound;
 import app.classeMorta.ClasseMorta.logic.dto.LoginRequest;
-import app.classeMorta.ClasseMorta.logic.dto.SaveStudent;
+import app.classeMorta.ClasseMorta.logic.dto.SaveObject;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
 import app.classeMorta.ClasseMorta.logic.service.StudentiService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static app.classeMorta.ClasseMorta.logic.ConditionalResponseEntity.*;
+import static app.classeMorta.ClasseMorta.logic.dto.ConditionalResponseEntity.*;
 
 @Slf4j
 @RestController
@@ -55,7 +55,7 @@ public class StudentiController {
     public ResponseEntity<ConditionalResponseEntity<Object>> salvaStudente(@RequestBody Studenti studente) {
         log.trace("Attempt to save studente: {}", studente);
         return studentiService.salvaStudente(studente.getName(), studente.getEmail(), studente.getPassword())
-                ? success(new SaveStudent(true, "Studente salvato con successo"))
-                : badRequest(new SaveStudent(false, "Errore nel salvataggio dello studente"));
+                ? success(new SaveObject(true, "Studente salvato con successo"))
+                : badRequest(new SaveObject(false, "Errore nel salvataggio dello studente"));
     }
 }

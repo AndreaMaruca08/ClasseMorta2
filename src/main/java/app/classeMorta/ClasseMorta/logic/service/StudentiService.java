@@ -45,7 +45,7 @@ public class StudentiService {
             studentiRepository.save(studente);
             studentiRepository.flush();  // Forza il flush subito dopo il salvataggio
         } catch (Exception e) {
-            log.info("ERRORE in 'salvaStudente' in StudentiService");
+            log.error("ERRORE in 'salvaStudente' in StudentiService");
             return false;
         }
         return true;

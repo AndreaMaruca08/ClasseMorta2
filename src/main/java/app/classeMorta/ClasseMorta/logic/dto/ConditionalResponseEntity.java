@@ -1,9 +1,8 @@
-package app.classeMorta.ClasseMorta.logic;
+package app.classeMorta.ClasseMorta.logic.dto;
 
 import org.springframework.http.ResponseEntity;
 
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 /**
  * Generic response wrapper that includes a success flag and message
@@ -11,17 +10,6 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
  * @param <T> Type of the message payload
  */
 public record ConditionalResponseEntity<T>(boolean successMessage, T message) {
-
-    /**
-     * Creates response indicating email is already used
-     *
-     * @param message Error message
-     * @return ConditionalResponseEntity with success=false
-     */
-    public static <T> ConditionalResponseEntity<T> emailUsed(T message) {
-        return new ConditionalResponseEntity<>(false, message);
-    }
-
     /**
      * Creates successful response
      *
@@ -61,7 +49,7 @@ public record ConditionalResponseEntity<T>(boolean successMessage, T message) {
      * @return ResponseEntity with 200 status and success=false
      */
     public static <T> ResponseEntity<ConditionalResponseEntity<T>> failed(T message) {
-        return ResponseEntity.ok(failedMessage(message));
+        return ResponseEntity.status(BAD_REQUEST).body(failedMessage(message));
     }
 
     /**

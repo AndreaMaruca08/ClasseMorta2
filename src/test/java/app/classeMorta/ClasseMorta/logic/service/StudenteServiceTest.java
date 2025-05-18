@@ -1,9 +1,8 @@
-package app.classeMorta.ClasseMorta.logic.service.Studenti;
+package app.classeMorta.ClasseMorta.logic.service;
 
 import app.classeMorta.ClasseMorta.logic.dto.LoginRequest;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
 import app.classeMorta.ClasseMorta.logic.repository.StudentiRepository;
-import app.classeMorta.ClasseMorta.logic.service.StudentiService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
