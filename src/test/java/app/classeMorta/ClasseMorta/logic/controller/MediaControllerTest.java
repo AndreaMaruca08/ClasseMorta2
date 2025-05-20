@@ -1,6 +1,7 @@
 package app.classeMorta.ClasseMorta.logic.controller;
 
 
+import app.classeMorta.ClasseMorta.logic.PeriodoVoto;
 import app.classeMorta.ClasseMorta.logic.dto.MediaRequest;
 import app.classeMorta.ClasseMorta.logic.models.Materie;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
@@ -58,19 +59,19 @@ public class MediaControllerTest{
         studentiRepository.save(studente);
 
         //voti
-        var voto = new Voti(4F, studente, materia, LocalDate.now());
+        var voto = new Voti(4F, studente, materia, LocalDate.now(), PeriodoVoto.PENTAMESTRE);
         votiRepository.save(voto);
-        var voto1 = new Voti(8F, studente, materia, LocalDate.now());
+        var voto1 = new Voti(8F, studente, materia, LocalDate.now(), PeriodoVoto.PENTAMESTRE);
         votiRepository.save(voto1);
 
-        var voto2 = new Voti(8F, studente, materia1, LocalDate.now());
+        var voto2 = new Voti(8F, studente, materia1, LocalDate.now(), PeriodoVoto.PENTAMESTRE);
         votiRepository.save(voto2);
     }
 
     //medie per materie e studenti
     @Test
     void testGetMediaPerMateria() throws Exception {
-        var mediaRequest = new MediaRequest(materia.getIdMateria(), studente.getId(), -1);
+        var mediaRequest = new MediaRequest(materia.getIdMateria(), studente.getId(), -1, PeriodoVoto.PENTAMESTRE);
         mockMvc.perform(post("/media/calcolaMedia")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(mediaRequest))
@@ -83,7 +84,7 @@ public class MediaControllerTest{
     @Test
     void testGetMediaPerMateria_errore() throws Exception {
         votiRepository.deleteAll();
-        var mediaRequest = new MediaRequest(materia.getIdMateria(), studente.getId(), -1);
+        var mediaRequest = new MediaRequest(materia.getIdMateria(), studente.getId(), -1, PeriodoVoto.PENTAMESTRE);
         mockMvc.perform(post("/media/calcolaMedia")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(mediaRequest))
@@ -96,7 +97,7 @@ public class MediaControllerTest{
     //medie ipotetiche
     @Test
     void testGetMediaPerMateriaIpotetico() throws Exception {
-        var mediaRequest = new MediaRequest(materia.getIdMateria(), studente.getId(), 8F);
+        var mediaRequest = new MediaRequest(materia.getIdMateria(), studente.getId(), 8F, PeriodoVoto.PENTAMESTRE);
         mockMvc.perform(post("/media/calcolaMedia")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(mediaRequest))
@@ -109,7 +110,7 @@ public class MediaControllerTest{
     @Test
     void testGetMediaPerMateriaIpotetico_errore() throws Exception {
         votiRepository.deleteAll();
-        var mediaRequest = new MediaRequest(materia.getIdMateria(), studente.getId(), 7);
+        var mediaRequest = new MediaRequest(materia.getIdMateria(), studente.getId(), 7, PeriodoVoto.PENTAMESTRE);
         mockMvc.perform(post("/media/calcolaMedia")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(mediaRequest))

@@ -1,5 +1,6 @@
 package app.classeMorta.ClasseMorta.logic.service;
 
+import app.classeMorta.ClasseMorta.logic.PeriodoVoto;
 import app.classeMorta.ClasseMorta.logic.models.Materie;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
 import app.classeMorta.ClasseMorta.logic.models.Voti;
@@ -44,17 +45,17 @@ public class VotiServiceTest {
         var materia = new Materie("info", studente);
         materieRepository.save(materia);
 
-        var voto = new Voti(7.5F, studente, materia, LocalDate.now());
+        var voto = new Voti(7.5F, studente, materia, LocalDate.now(), PeriodoVoto.PENTAMESTRE);
         votiRepository.save(voto);
 
-        var voto1 = new Voti(9F, studente, materia, LocalDate.now());
+        var voto1 = new Voti(9F, studente, materia, LocalDate.now(), PeriodoVoto.PENTAMESTRE);
         votiRepository.save(voto1);
 
         //creazione della lista
         var voti = List.of(voto, voto1);
 
         //controllo se la lista fatta a mano è uguale alla lista fatta dalla funzione del service
-        assertIterableEquals(voti, votiService.getVotiPerMateriaEID(materia.getIdMateria(), studente.getId()));
+        assertIterableEquals(voti, votiService.getVotiPerMateriaEIDAndPeriodo(materia.getIdMateria(), studente.getId(), PeriodoVoto.PENTAMESTRE));
 
     }
 
