@@ -1,80 +1,67 @@
 plugins {
-    id 'org.springframework.boot' version '3.2.5'  // Plugin Spring Boot
-    id 'io.spring.dependency-management' version '1.1.4'  // Plugin per la gestione delle dipendenze
-    id 'java'  // Plugin per compilare Java
+    id 'org.springframework.boot' version '3.2.5'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
 }
 
-group = 'app.classeMorta'  // Gruppo del progetto
-version = '0.0.1-SNAPSHOT'  // Versione del progetto
+group = 'app.classeMorta'
+version = '0.0.1-SNAPSHOT'
 
-// Configurazione del toolchain Java (versione 23)
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(23)  // Versione di Java da usare
+        languageVersion = JavaLanguageVersion.of(23)
     }
-}
-
-// Configurazione per il jar di Spring Boot
-bootJar {
-    archiveFileName = 'ClasseMorta.jar'  // Nome del file JAR
-    launchScript()  // Per creare uno script di avvio su Unix/macOS
-    manifest {
-        attributes(
-                'Main-Class': 'app.classeMorta.ClasseMorta.Main'  // Classe principale per avviare l'app
-        )
-    }
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE  // Escludi file duplicati nel JAR
-    archiveBaseName.set("ClasseMorta2")  // Base name per il JAR
-    archiveVersion.set("")  // Versione vuota, se desideri usarla puoi impostarla qui
-    archiveClassifier.set("")  // Classificatore vuoto
-}
-
-// Configurazione del task di test
-test {
-    jvmArgs += "--enable-native-access=ALL-UNNAMED"  // Necessario per alcuni test con native access
-}
-
-tasks.withType(JavaExec).configureEach {
-    jvmArgs += "--enable-native-access=ALL-UNNAMED"  // Aggiunge gli stessi argomenti per le esecuzioni Java
-}
-
-// Configurazione di bootRun per specificare la classe principale
-bootRun {
-    mainClass = 'app.classeMorta.ClasseMorta.Main'  // Classe principale da eseguire
 }
 
 repositories {
-    mavenCentral()  // Usa Maven Central per recuperare le dipendenze
+    mavenCentral()
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.jsoup:jsoup:1.17.2'
+    implementation "io.netty:netty-resolver-dns-native-macos:4.1.110.Final:osx-aarch_64"
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
-    // Versioni Java di compilazione
-    sourceCompatibility = '23'
-    targetCompatibility = '23'
+    compileOnly 'org.projectlombok:lombok:1.18.32'
+    annotationProcessor 'org.projectlombok:lombok:1.18.32'
+    testCompileOnly 'org.projectlombok:lombok:1.18.32'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 
-    // Dipendenze principali per Spring Boot
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'  // Supporto per JPA
-    implementation 'org.springframework.boot:spring-boot-starter-web'  // Supporto per Web (REST API)
-    runtimeOnly 'com.mysql:mysql-connector-j'  // Connessione a MySQL
-
-    // Dipendenze per i test
-    testImplementation 'com.h2database:h2'  // Database H2 per test in memoria
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'  // Supporto per i test con Spring Boot
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'  // Lanciatori per JUnit 5
-    testImplementation 'org.mockito:mockito-core:5.12.0'  // Mockito per il mocking nei test
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'  // API per JUnit 5
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'  // Motore di esecuzione per JUnit 5
-
-    // Lombok per generare getter/setter, costruttori, etc.
-    compileOnly 'org.projectlombok:lombok:1.18.32'  // Lombok per la compilazione
-    annotationProcessor 'org.projectlombok:lombok:1.18.32'  // Lombok per l'elaborazione delle annotazioni
-    testCompileOnly 'org.projectlombok:lombok:1.18.32'  // Lombok per i test
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'  // Lombok per i test
+    testImplementation 'com.h2database:h2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
-// Configura i task di test per usare JUnit 5
-tasks.named('test') {
-    useJUnitPlatform()  // Configura l'uso di JUnit Platform (JUnit 5)
+tasks.withType(Test) {
+    useJUnitPlatform()
+    jvmArgs += "--enable-native-access=ALL-UNNAMED"
+}
+
+tasks.withType(JavaExec).configureEach {
+    jvmArgs += "--enable-native-access=ALL-UNNAMED"
+}
+
+// === Sezione fondamentale per JAR eseguibile ===
+
+springBoot {
+    mainClass = "app.classeMorta.ClasseMorta.GUI.UIApplication"
+}
+
+bootJar {
+    archiveFileName = 'ClasseMorta.jar'
+    launchScript()  // Utile su Unix/Mac per doppio click, crea script di avvio
+}
+
+// NON servono manifest custom o archiveBaseName: il task bootJar fa tutto
+
+// Se vuoi lanciare localmente con run:
+bootRun {
+    mainClass.set('app.classeMorta.ClasseMorta.GUI.UIApplication')
 }

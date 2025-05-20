@@ -1,4 +1,6 @@
 package app.classeMorta.ClasseMorta.logic.dto;
 
-public record MediaRequest(Long idMateria, Long idStudente, float ipotetico) {
+import app.classeMorta.ClasseMorta.logic.PeriodoVoto;
+
+public record MediaRequest(Long idMateria, Long idStudente, float ipotetico, PeriodoVoto periodoVoto) {
 }

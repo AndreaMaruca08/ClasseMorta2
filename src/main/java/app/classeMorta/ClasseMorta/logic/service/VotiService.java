@@ -1,32 +1,43 @@
 package app.classeMorta.ClasseMorta.logic.service;
 
+import app.classeMorta.ClasseMorta.logic.PeriodoVoto;
 import app.classeMorta.ClasseMorta.logic.models.Materie;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
 import app.classeMorta.ClasseMorta.logic.models.Voti;
+import app.classeMorta.ClasseMorta.logic.repository.MaterieRepository;
 import app.classeMorta.ClasseMorta.logic.repository.VotiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class VotiService {
 
     private final VotiRepository votiRepository;
+    private final MaterieRepository materieRepository;
 
     @Autowired
-    public VotiService(VotiRepository votiRepository) {
+    public VotiService(VotiRepository votiRepository, MaterieRepository materieRepository) {
         this.votiRepository = votiRepository;
+        this.materieRepository = materieRepository;
     }
 
-    public List<Voti> getVotiPerMateriaEID(Long idMateria, Long idStudente) {
-        return votiRepository.findAllByStudente_IdAndMateria_IdMateria(idStudente, idMateria);
+    public List<Voti> getVotiPerMateriaEIDAndPeriodo(Long idMateria, Long idStudente, PeriodoVoto periodo) {
+        if (periodo == PeriodoVoto.ANNO) {
+            // prendi tutti i voti della materia per lo studente, indipendentemente dal periodo
+            return votiRepository.findAllByStudente_IdAndMateria_IdMateria(idStudente, idMateria);
+        } else {
+            return votiRepository.findAllByStudente_IdAndMateria_IdMateriaAndPeriodo(idStudente, idMateria, periodo);
+        }
     }
 
-    public void salvaVoto(Float voto, Materie materia, Studenti studenti) {
-        Voti voto1 = new Voti(voto, studenti, materia, LocalDate.now());
+    public void salvaVoto(Float voto, Materie materia, Studenti studenti, PeriodoVoto periodoVoto) {
+        Voti voto1 = new Voti(voto, studenti, materia, LocalDate.now(), periodoVoto);
         votiRepository.save(voto1);
     }
 
@@ -37,6 +48,14 @@ public class VotiService {
             return true;
         }
         return false; // se non esiste la materia
+    }
+
+    public void importaVotiFromClasseViva(String phpCodice, Studenti studente){
+        new ImportaVotiFromSpaggiariService(materieRepository).importaVoti(phpCodice, studente);
+    }
+
+    public String getCodiceSpaggiari(String codice, String password){
+        return new ImportaVotiFromSpaggiariService(materieRepository).ottieniPhpsessid(codice, password);
     }
 
 }

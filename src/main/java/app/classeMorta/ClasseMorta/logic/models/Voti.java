@@ -1,5 +1,6 @@
 package app.classeMorta.ClasseMorta.logic.models;
 
+import app.classeMorta.ClasseMorta.logic.PeriodoVoto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,10 +32,16 @@ public class Voti {
     @Column(nullable = false)
     private LocalDate data;
 
-    public Voti(Float voto, Studenti studente, Materie materia, LocalDate data) {
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    private PeriodoVoto periodo;
+
+
+    public Voti(Float voto, Studenti studente, Materie materia, LocalDate data, PeriodoVoto periodo) {
         this.data = data;
         this.voto = voto;
         this.studente = studente;
         this.materia = materia;
+        this.periodo = periodo;
     }
 }

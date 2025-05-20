@@ -3,6 +3,7 @@ package app.classeMorta.ClasseMorta.logic.controller;
 import static app.classeMorta.ClasseMorta.logic.dto.ConditionalResponseEntity.*;
 
 import app.classeMorta.ClasseMorta.logic.dto.ConditionalResponseEntity;
+import app.classeMorta.ClasseMorta.logic.PeriodoVoto;
 import app.classeMorta.ClasseMorta.logic.dto.SaveObject;
 import app.classeMorta.ClasseMorta.logic.dto.SaveVotoRequest;
 import app.classeMorta.ClasseMorta.logic.service.MaterieService;
@@ -29,11 +30,11 @@ public class VotiController {
     }
 
     @GetMapping("/VotiPerMateria")
-    public ResponseEntity<ConditionalResponseEntity<Object>> getVotiPerMateriaEID(@RequestParam Long idMateria, @RequestParam Long idStudente) {
+    public ResponseEntity<ConditionalResponseEntity<Object>> getVotiPerMateriaEID(@RequestParam Long idMateria, @RequestParam Long idStudente, @RequestParam PeriodoVoto periodo) {
         log.trace("Attempt to get voti per materia {} e studente {}", idMateria, idStudente);
-        return votiService.getVotiPerMateriaEID(idMateria, idStudente).isEmpty()
+        return votiService.getVotiPerMateriaEIDAndPeriodo(idMateria, idStudente, periodo).isEmpty()
                 ? notFound("Nessun voto ")
-                : success(votiService.getVotiPerMateriaEID(idMateria, idStudente));
+                : success(votiService.getVotiPerMateriaEIDAndPeriodo(idMateria, idStudente, periodo));
     }
 
     @PostMapping("/saveVoto")
@@ -42,7 +43,8 @@ public class VotiController {
         votiService.salvaVoto(
                 saveVotoRequest.voto(),
                 materieService.getMateriaByID(saveVotoRequest.idMateria()),
-                studentiService.getStudenteByID(saveVotoRequest.idStudente()));
+                studentiService.getStudenteByID(saveVotoRequest.idStudente()),
+                saveVotoRequest.periodoVoto());
 
         return success(new SaveObject(true, "Voto salvato con successo"));
     }

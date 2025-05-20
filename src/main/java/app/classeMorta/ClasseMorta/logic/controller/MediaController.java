@@ -2,6 +2,7 @@ package app.classeMorta.ClasseMorta.logic.controller;
 
 import app.classeMorta.ClasseMorta.logic.dto.ConditionalResponseEntity;
 import app.classeMorta.ClasseMorta.logic.dto.MediaRequest;
+import app.classeMorta.ClasseMorta.logic.PeriodoVoto;
 import app.classeMorta.ClasseMorta.logic.service.MediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +27,8 @@ public class MediaController {
         log.trace("Attempt to get media per materia {} e studente {}", mediaRequest.idMateria(), mediaRequest.idStudente());
 
         return mediaService.calcolaMediaPerMateria(mediaRequest)
-                == 0.0F
-                ? notFound("Nessuna media") : success(mediaService.calcolaMediaPerMateria(mediaRequest));
+                == 0.0F ?
+                notFound("Nessuna media") : success(mediaService.calcolaMediaPerMateria(mediaRequest));
     }
 
     @PostMapping("/calcolaMediaIpotetica")
@@ -43,10 +44,11 @@ public class MediaController {
     @PostMapping("/mediaAll")
     public ResponseEntity<ConditionalResponseEntity<Object>> getMediaTot(@RequestBody Long idStudente) {
         log.trace("Attempt to get media per materia");
-        return mediaService.calcolaMediaTot(idStudente)
+
+        return mediaService.calcolaMediaTot(idStudente, PeriodoVoto.ANNO)
                 == 0.0F
                 ? notFound("Nessuna media totale")
-                : success(mediaService.calcolaMediaTot(idStudente));
+                : success(mediaService.calcolaMediaTot(idStudente, PeriodoVoto.ANNO));
     }
 
 }

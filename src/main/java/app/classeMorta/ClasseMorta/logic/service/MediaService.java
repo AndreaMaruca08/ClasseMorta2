@@ -1,8 +1,8 @@
 package app.classeMorta.ClasseMorta.logic.service;
 
 import app.classeMorta.ClasseMorta.logic.dto.MediaRequest;
+import app.classeMorta.ClasseMorta.logic.PeriodoVoto;
 import app.classeMorta.ClasseMorta.logic.models.Materie;
-import app.classeMorta.ClasseMorta.logic.models.Studenti;
 import app.classeMorta.ClasseMorta.logic.models.Voti;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class MediaService {
     public float calcolaMediaPerMateria(MediaRequest mediaRequest) {
         var somma = 0.0F;
         int aumento = 0;
-        List<Voti> listaVoti = votiService.getVotiPerMateriaEID(mediaRequest.idMateria(), mediaRequest.idStudente());
+        List<Voti> listaVoti = votiService.getVotiPerMateriaEIDAndPeriodo(mediaRequest.idMateria(), mediaRequest.idStudente(), mediaRequest.periodoVoto());
 
         if (listaVoti == null || listaVoti.isEmpty()) {
             return 0.0F;
@@ -56,16 +56,20 @@ public class MediaService {
      * @return la media totale come Float, null se non ci sono materie,
      * 0.0F se non ci sono voti in nessuna materia
      */
-    public float calcolaMediaTot(Long idStudente) {
+    public float calcolaMediaTot(Long idStudente, PeriodoVoto periodoVoto) {
         float sommaTot = 0.0F;
         int materieConVoti = 0;
+        float mediaMat;
         List<Materie> listaMaterie = materieService.getAllMaterie(studentiService.getStudenteByID(idStudente));
         if (listaMaterie == null) {
             return 0.0F;
         }
         for (Materie materia : listaMaterie) {
             Long idM = materia.getIdMateria();
-            float mediaMat = calcolaMediaPerMateria(new MediaRequest(idM, idStudente, -1));
+            if(periodoVoto == PeriodoVoto.ANNO)
+                 mediaMat = calcolaMediaPerMateria(new MediaRequest(idM, idStudente, -1, periodoVoto));
+            else
+                mediaMat = calcolaMediaPerMateria(new MediaRequest(idM, idStudente, -1, periodoVoto));
             if (mediaMat != 0.0F) {
                 sommaTot += mediaMat;
                 materieConVoti++;
