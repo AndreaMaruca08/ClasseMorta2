@@ -1,6 +1,7 @@
 package app.classeMorta.ClasseMorta.logic.service;
 
 import app.classeMorta.ClasseMorta.logic.dto.MediaRequest;
+import app.classeMorta.ClasseMorta.logic.PeriodoVoto;
 import app.classeMorta.ClasseMorta.logic.models.Materie;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
 import app.classeMorta.ClasseMorta.logic.models.Voti;
@@ -48,9 +49,9 @@ public class MediaServiceTest {
         materieRepository.save(materia);
 
         //creo 2 voti provvisori
-        Voti voto = new Voti(8F, studente, materia, LocalDate.now());
+        Voti voto = new Voti(8F, studente, materia, LocalDate.now(), PeriodoVoto.PENTAMESTRE);
         votiRepository.save(voto);
-        Voti voto1 = new Voti(4F, studente, materia, LocalDate.now());
+        Voti voto1 = new Voti(4F, studente, materia, LocalDate.now(), PeriodoVoto.PENTAMESTRE);
         votiRepository.save(voto1);
 
         //lista fatta a mano
@@ -60,7 +61,7 @@ public class MediaServiceTest {
         float mediaManuale = 19F / listaManuale.size();
 
         //controllo che la media a mano sia uguale a quella fatta con la funzione
-        MediaRequest mediaRequest = new MediaRequest(materia.getIdMateria(), studente.getId(), 7);
+        MediaRequest mediaRequest = new MediaRequest(materia.getIdMateria(), studente.getId(), 7, PeriodoVoto.PENTAMESTRE);
         assertEquals(mediaManuale, mediaService.calcolaMediaPerMateria(mediaRequest));
 
     }
@@ -80,15 +81,15 @@ public class MediaServiceTest {
         materieRepository.save(materia1);
 
         //creo 2 voti provvisori
-        Voti voto = new Voti(8F, studente, materia, LocalDate.now());
+        Voti voto = new Voti(8F, studente, materia, LocalDate.now(), PeriodoVoto.PENTAMESTRE);
         votiRepository.save(voto);
-        Voti voto1 = new Voti(4F, studente, materia, LocalDate.now());
+        Voti voto1 = new Voti(4F, studente, materia, LocalDate.now(), PeriodoVoto.PENTAMESTRE);
         votiRepository.save(voto1);
 
         //creo 2 voti provvisori per la seconda materia
-        Voti voto2 = new Voti(7F, studente, materia1, LocalDate.now());
+        Voti voto2 = new Voti(7F, studente, materia1, LocalDate.now(), PeriodoVoto.PENTAMESTRE);
         votiRepository.save(voto2);
-        Voti voto3 = new Voti(4F, studente, materia1, LocalDate.now());
+        Voti voto3 = new Voti(4F, studente, materia1, LocalDate.now(), PeriodoVoto.PENTAMESTRE);
         votiRepository.save(voto3);
 
         //calcolo manuale delle medie
@@ -98,7 +99,7 @@ public class MediaServiceTest {
         float mediaTotManuale = (mediaMat1 + mediaMat) / 2.0F;
 
         //controllo che la media manuale sia uguale a quella data dalla funzione
-        assertEquals(mediaTotManuale, mediaService.calcolaMediaTot(studente.getId()));
+        assertEquals(mediaTotManuale, mediaService.calcolaMediaTot(studente.getId(), PeriodoVoto.PENTAMESTRE));
 
     }
 
