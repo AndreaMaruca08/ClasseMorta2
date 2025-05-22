@@ -46,6 +46,7 @@ import static app.classeMorta.ClasseMorta.GUI.GUIUtils.*;
  *     <li>{@code MediaService mediaService} – Service per il calcolo delle medie.</li>
  *     <li>{@code String id} – Identificativo sessione o utente corrente.</li>
  * </ul>
+ * @since 1.00
  */
 @Component
 @RequiredArgsConstructor
@@ -254,12 +255,6 @@ public class SwingGUI {
 
         // Aggiunge il pannello dei bottoni per le materie
         panel.add(pannelloStampaBottoni(cardLayout, panelContainer));
-
-        // Crea i pannelli per le medie dei periodi
-        JPanel panelMedieTr = pannelloStampaMedie(mediaService.calcolaMediaTot(id, PeriodoVoto.TRIMESTRE), cardLayout, panelContainer, PeriodoVoto.TRIMESTRE);
-        panel.add(panelMedieTr);
-        JPanel panelMediePe = pannelloStampaMedie(mediaService.calcolaMediaTot(id, PeriodoVoto.PENTAMESTRE), cardLayout, panelContainer, PeriodoVoto.PENTAMESTRE);
-
         // Pulsante per aggiungere materia
         JButton aggiungiMateria = creabottone("Aggiungi Materia", 40, 3, 20, 5, 15);
         aggiungiMateria.addActionListener(_ -> cardLayout.show(panelContainer, "aggiungiMateria"));
@@ -281,35 +276,15 @@ public class SwingGUI {
         });
         panel.add(tema);
 
-        // Gestione del cambio periodo
-        final boolean[] periodo = {true};
+        //carico delle medie
+        caricaMedie(cardLayout, panelContainer, panel);
 
         // Pulsante per importare voti
         JButton importaVoti = creabottone("Importa voti", 10, 0, 10, 5, 15);
         importaVoti.addActionListener(_ -> cardLayout.show(panelContainer, "importaVoti"));
         panel.add(importaVoti);
 
-        // Configurazione del contenitore per i voti
-        CardLayout cardLayoutVoti = new CardLayout();
-        JPanel panelContainerVoti = new JPanel(cardLayoutVoti);
-        panelContainerVoti.setBounds(getX(5), getY(5), getX(33), getY(74));
-        panelContainerVoti.add(panelMedieTr, "TRIMESTRE");
-        panelContainerVoti.add(panelMediePe, "PENTAMESTRE");
-        panel.add(panelContainerVoti);
 
-        // Pulsante per cambiare periodo
-        JButton cambiaPeriodo = creabottone("Cambia periodo", 20, 0, 10, 5, 15);
-        cambiaPeriodo.addActionListener(_ -> {
-            if(periodo[0]) {
-                periodo[0] = false;
-                cardLayoutVoti.show(panelContainerVoti, "PENTAMESTRE");
-            }
-            else {
-                periodo[0] = true;
-                cardLayoutVoti.show(panelContainerVoti, "TRIMESTRE");
-            }
-        });
-        panel.add(cambiaPeriodo);
 
         // Pulsante per disconnettersi
         JButton disconnetti = creabottone("Disconnetti", 80, 80, 20, 10, 20);
@@ -363,32 +338,8 @@ public class SwingGUI {
         });
         panel.add(ritorno);
 
-        // Gestione pannelli per le medie ipotetiche
-        JPanel panelMedieTr = pannelloVotiIpotetici(materia, PeriodoVoto.TRIMESTRE);
-        panel.add(panelMedieTr);
-        JPanel panelMediePe = pannelloVotiIpotetici(materia, PeriodoVoto.PENTAMESTRE);
-
-        // Container per le medie con CardLayout
-        CardLayout cardLayoutMedie = new CardLayout();
-        JPanel panelContainerMedie = new JPanel(cardLayoutMedie);
-        panelContainerMedie.setBounds(getX(2), getY(5), getX(38), getY(80));
-        panelContainerMedie.add(panelMedieTr, "TRIMESTREMedie");
-        panelContainerMedie.add(panelMediePe, "PENTAMESTREMedie");
-        panel.add(panelContainerMedie);
-
-        // Gestione cambio periodo per medie ipotetiche
-        boolean[] periodob = {false};
-        JButton cambiaPeriodo = creabottone("Cambia periodo", 20, 0, 10, 5, 15);
-        cambiaPeriodo.addActionListener(_ -> {
-            if (!periodob[0]) {
-                periodob[0] = true;
-                cardLayoutMedie.show(panelContainerMedie, "PENTAMESTREMedie");
-            } else {
-                periodob[0] = false;
-                cardLayoutMedie.show(panelContainerMedie, "TRIMESTREMedie");
-            }
-        });
-        panel.add(cambiaPeriodo);
+        //aggiunge i
+        aggiungiVoti(panel, materia);
 
         // Componenti per l'aggiunta di nuovi voti
         Float[] voti = {
@@ -433,6 +384,8 @@ public class SwingGUI {
 
         trimestre.addActionListener(_ -> cardLayoutVoti.show(panelContainerVoti, "TRIMESTRE"));
         pentamestre.addActionListener(_ -> cardLayoutVoti.show(panelContainerVoti, "PENTAMESTRE"));
+
+
 
         // Aggiunta componenti finali al pannello
         panel.add(trimestre);
@@ -610,6 +563,8 @@ public class SwingGUI {
         panel.setBounds(getX(45), getY(15), getX(50), getY(68));
         panel.setBackground(coloreSecondario);
 
+        panel.add(grafico(periodoVoto, materia));
+
         int x = 2, y = 8, i = 0;
         List<Voti> listaVoti = votiService.getVotiPerMateriaEIDAndPeriodo(materia.getIdMateria(), id, periodoVoto);
 
@@ -649,10 +604,15 @@ public class SwingGUI {
             i++;
             x += 12;
         }
-
         panel.add(creaLabel("Voti (dal più vecchio)", -5, -2, 30, 10, 25, coloreTesto));
         panel.add(creaLabel(periodoVoto.toString(), 20, -2, 18, 10, 22, coloreTesto));
         return panel;
+    }
+
+    public JPanel grafico(PeriodoVoto periodoVoto, Materie materia){
+        ChartPanelCustom chartPanelCustom = new ChartPanelCustom("Andamento " + periodoVoto, "Media", "Tempo", votiService.getVotiPerMateriaEIDAndPeriodo(materia.getIdMateria(), id, periodoVoto));
+        chartPanelCustom.setBounds(getX(0), getY(45), getX(50), getY(27));
+        return chartPanelCustom;
     }
 
     /**
@@ -698,6 +658,67 @@ public class SwingGUI {
         panel1.add(creaLabel("Medie ipotetiche", -1, 12, 20, 10, 25, coloreTesto));
         panel1.add(creaLabel("Media " + materia.getNomeMateria(), -1, -3, 20, 10, 25, coloreTesto));
         return panel1;
+    }
+
+    public void caricaMedie(CardLayout cardLayout, JPanel panelContainer, JPanel panel) {
+        // Gestione del cambio periodo
+        final boolean[] periodo = {true};
+        // Crea i pannelli per le medie dei periodi
+        JPanel panelMedieTr = pannelloStampaMedie(mediaService.calcolaMediaTot(id, PeriodoVoto.TRIMESTRE), cardLayout, panelContainer, PeriodoVoto.TRIMESTRE);
+        panel.add(panelMedieTr);
+        JPanel panelMediePe = pannelloStampaMedie(mediaService.calcolaMediaTot(id, PeriodoVoto.PENTAMESTRE), cardLayout, panelContainer, PeriodoVoto.PENTAMESTRE);
+
+        // Configurazione del contenitore per i voti
+        CardLayout cardLayoutVoti = new CardLayout();
+        JPanel panelContainerVoti = new JPanel(cardLayoutVoti);
+        panelContainerVoti.setBounds(getX(5), getY(5), getX(33), getY(74));
+        panelContainerVoti.add(panelMedieTr, "TRIMESTRE");
+        panelContainerVoti.add(panelMediePe, "PENTAMESTRE");
+        panel.add(panelContainerVoti);
+
+        // Pulsante per cambiare periodo
+        JButton cambiaPeriodo = creabottone("Cambia periodo", 20, 0, 10, 5, 15);
+        cambiaPeriodo.addActionListener(_ -> {
+            if(periodo[0]) {
+                periodo[0] = false;
+                cardLayoutVoti.show(panelContainerVoti, "PENTAMESTRE");
+            }
+            else {
+                periodo[0] = true;
+                cardLayoutVoti.show(panelContainerVoti, "TRIMESTRE");
+            }
+        });
+        panel.add(cambiaPeriodo);
+    }
+
+    public void aggiungiVoti(JPanel panel, Materie materia) {
+        // Gestione pannelli per le medie ipotetiche
+        JPanel panelMedieTr = pannelloVotiIpotetici(materia, PeriodoVoto.TRIMESTRE);
+        panel.add(panelMedieTr);
+        JPanel panelMediePe = pannelloVotiIpotetici(materia, PeriodoVoto.PENTAMESTRE);
+
+
+        // Container per le medie con CardLayout
+        CardLayout cardLayoutMedie = new CardLayout();
+        JPanel panelContainerMedie = new JPanel(cardLayoutMedie);
+        panelContainerMedie.setBounds(getX(2), getY(5), getX(38), getY(80));
+        panelContainerMedie.add(panelMedieTr, "TRIMESTREMedie");
+        panelContainerMedie.add(panelMediePe, "PENTAMESTREMedie");
+        panel.add(panelContainerMedie);
+
+        // Gestione cambio periodo per medie ipotetiche
+        boolean[] periodob = {false};
+        JButton cambiaPeriodo = creabottone("Cambia periodo", 20, 0, 10, 5, 15);
+        cambiaPeriodo.addActionListener(_ -> {
+            if (!periodob[0]) {
+                periodob[0] = true;
+                cardLayoutMedie.show(panelContainerMedie, "PENTAMESTREMedie");
+            } else {
+                periodob[0] = false;
+                cardLayoutMedie.show(panelContainerMedie, "TRIMESTREMedie");
+            }
+        });
+        panel.add(cambiaPeriodo);
     }
 
     /**
