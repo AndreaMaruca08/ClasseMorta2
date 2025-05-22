@@ -51,7 +51,7 @@ public class MediaControllerTest{
     @BeforeEach
     void setup(){
 
-        studente = new Studenti("testStudente", "test@gmail.com", "test".toCharArray());
+        studente = new Studenti("testStudente", "test@gmail.com", "test");
         materia = new Materie("testMateria", studente);
         Materie materia1 = new Materie("testMateria1", studente);
         materieRepository.save(materia);
@@ -122,14 +122,23 @@ public class MediaControllerTest{
 
     //medie totali
     @Test
-    void testGetMediaTot()throws Exception{
+    void testGetMediaTot() throws Exception {
+        MediaRequest req = new MediaRequest(
+            -1L,              // idMateria
+            studente.getId(),          // idStudente
+            -1.0f,                     // ipotetico
+            PeriodoVoto.PENTAMESTRE    // periodoVoto
+        );
+
         mockMvc.perform(post("/media/mediaAll")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(studente.getId()))
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(req))
         )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.successMessage").value(true))
-                .andExpect(jsonPath("$.message").value(7F));
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.successMessage").value(true))
+        .andExpect(jsonPath("$.message").value(7F));
+        // Rimuovi questo controllo sotto se "message" NON è un oggetto
+        //.andExpect(jsonPath("$.message.periodoVoto").value(PeriodoVoto.PENTAMESTRE.toString()));
     }
 
 }

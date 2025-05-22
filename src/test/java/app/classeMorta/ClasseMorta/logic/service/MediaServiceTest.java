@@ -41,7 +41,7 @@ public class MediaServiceTest {
     @Test
     void testCalcoloMediaPerMateria() {
         //creazioni dello studente per il test
-        Studenti studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
+        Studenti studente = new Studenti("Test", "test@gmail.com", "test");
 
         //salvo in h2
         studentiRepository.save(studente);
@@ -69,7 +69,7 @@ public class MediaServiceTest {
     @Test
     void testMediaTotale() {
         //creazioni dello studente per il test
-        Studenti studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
+        Studenti studente = new Studenti("Test", "test@gmail.com", "test");
 
         //salvo in h2
         studentiRepository.save(studente);

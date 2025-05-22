@@ -22,9 +22,9 @@ public class Studenti {
     private String email;
 
     @Column(name = "password", nullable = false) // <-- Questo è il campo persistente
-    private char[] password;
+    private String password;
 
-    public Studenti(String name, String email, char[] password) {
+    public Studenti(String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;

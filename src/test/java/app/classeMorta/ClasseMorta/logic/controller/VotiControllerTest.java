@@ -58,7 +58,7 @@ public class VotiControllerTest {
 
     @BeforeEach
     void setUp() {
-        studente = new Studenti("testStudente", "test@gmail.com", "test".toCharArray());
+        studente = new Studenti("testStudente", "test@gmail.com", "test");
         materia = new Materie("testMateria",studente );
         materieRepository.save(materia);
         studentiRepository.save(studente);

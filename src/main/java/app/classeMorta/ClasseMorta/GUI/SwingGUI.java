@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -155,9 +156,8 @@ public class SwingGUI {
                     char[] rawPassword = areaPassword.getPassword();
                     String passwordString = new String(rawPassword);
                     passwordString = passwordString.trim();
-                    char[] trimmedPassword = passwordString.toCharArray();
 
-                    studentiService.salvaStudente(areaNome.getText().trim(), areaEmail.getText().trim(), trimmedPassword);
+                    studentiService.salvaStudente(areaNome.getText().trim(), areaEmail.getText().trim(), passwordString);
                     mostraInformazioni("SUCCESSO", "Account creato con successo");
                 }
             } catch (Exception e) {
@@ -196,31 +196,38 @@ public class SwingGUI {
         JTextArea areaEmail = creaArea("inserisci qui la Email ", 45, 25, 20, 5, 18);
         JPasswordField areaPassword = creaPassField(45, 30, 20, 5, 18);
 
-        // Crea i pulsanti 
+        // Crea i pulsanti
         JButton accedi = creabottone("accedi", 30, 40, 40, 8, 20);
         JButton creazione = creabottone("non hai un account?", 30, 50, 15, 5, 18);
         JButton esci = creabottone("ESCI", 90, 82, 10, 10, 18);
         esci.addActionListener(_ -> System.exit(0));
 
         // Gestisce il login
-        try {
-            accedi.addActionListener(_ -> {
-                String email = areaEmail.getText();
-                char[] password = areaPassword.getPassword();
-                LoginRequest loginRequest = new LoginRequest(email, password);
-                if (isStudentPresent(loginRequest)) {
-                    id = studentiService.getStudentIdByEmail(email);
-                    panelContainer.add(importaVoti(cardLayout, panelContainer), "importaVoti");
-                    panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
-                    panelContainer.add(mainPage(cardLayout, panelContainer), "main");
-                    cardLayout.show(panelContainer, "main");
-                }
-            });
-        } catch (NullPointerException e) {
-            log.error("ERRORE : errore nel caricamento dei dati in accedi : NullPointerException ");
-        } catch (Exception e) {
-            log.error("ERRORE in accedi ");
-        }
+        accedi.addActionListener(_ -> {
+            String email = areaEmail.getText().trim();
+
+            // Converti array di char in String corretta!
+            char[] passChars = areaPassword.getPassword();
+            String password = new String(passChars);
+
+            // Pulizia dati sensibili subito dopo l'uso
+            Arrays.fill(passChars, '\0');
+
+            if (email.isEmpty() || password.isEmpty()) {
+                mostraErrore("ERRORE", "Email e password sono obbligatorie.");
+                return;
+            }
+
+            LoginRequest loginRequest = new LoginRequest(email, password);
+
+            if (isStudentPresent(loginRequest)) {
+                id = studentiService.getStudentIdByEmail(email); // qui va bene Long (come nel service)
+                panelContainer.add(importaVoti(cardLayout, panelContainer), "importaVoti");
+                panelContainer.add(creaMateria(cardLayout, panelContainer), "aggiungiMateria");
+                panelContainer.add(mainPage(cardLayout, panelContainer), "main");
+                cardLayout.show(panelContainer, "main");
+            }
+        });
 
         creazione.addActionListener(_ -> cardLayout.show(panelContainer, "crea"));
 
@@ -233,6 +240,7 @@ public class SwingGUI {
 
         return accediPanel;
     }
+
 
     /**
      * Crea la pagina principale dell'applicazione
@@ -288,7 +296,7 @@ public class SwingGUI {
         panelContainerVoti.add(panelMedieTr, "TRIMESTRE");
         panelContainerVoti.add(panelMediePe, "PENTAMESTRE");
         panel.add(panelContainerVoti);
-    
+
         // Pulsante per cambiare periodo
         JButton cambiaPeriodo = creabottone("Cambia periodo", 20, 0, 10, 5, 15);
         cambiaPeriodo.addActionListener(_ -> {
@@ -302,7 +310,7 @@ public class SwingGUI {
             }
         });
         panel.add(cambiaPeriodo);
-    
+
         // Pulsante per disconnettersi
         JButton disconnetti = creabottone("Disconnetti", 80, 80, 20, 10, 20);
         disconnetti.addActionListener(_ -> {
@@ -310,7 +318,7 @@ public class SwingGUI {
             cardLayout.show(panelContainer, "accesso");
         });
         panel.add(disconnetti);
-    
+
         return panel;
     }
 
@@ -479,7 +487,7 @@ public class SwingGUI {
             try {
                 materieService.deleteAll(studentiService.getStudenteByID(id));
                 String phpSess = votiService.getCodiceSpaggiari(email, password);
-                votiService.importaVotiFromClasseViva(phpSess, studentiService.getStudenteByID(id));
+                votiService.importaVotiFromClasseViva(phpSess, id);
                 mostraInformazioni("successo", "Importazione voti avvenuta con successo");
             } catch (RuntimeException ex) {
                 mostraErrore("Errore di autenticazione", "Errore durante il login: " + ex.getMessage() + "\n\nControlla le credenziali e riprova.");

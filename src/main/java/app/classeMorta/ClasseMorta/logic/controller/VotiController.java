@@ -32,9 +32,8 @@ public class VotiController {
     @GetMapping("/VotiPerMateria")
     public ResponseEntity<ConditionalResponseEntity<Object>> getVotiPerMateriaEID(@RequestParam Long idMateria, @RequestParam Long idStudente, @RequestParam PeriodoVoto periodo) {
         log.trace("Attempt to get voti per materia {} e studente {}", idMateria, idStudente);
-        return votiService.getVotiPerMateriaEIDAndPeriodo(idMateria, idStudente, periodo).isEmpty()
-                ? notFound("Nessun voto ")
-                : success(votiService.getVotiPerMateriaEIDAndPeriodo(idMateria, idStudente, periodo));
+        return votiService.getVotiPerMateriaEIDAndPeriodo(idMateria, idStudente, periodo).isEmpty() ?
+                notFound("Nessun voto ") : success(votiService.getVotiPerMateriaEIDAndPeriodo(idMateria, idStudente, periodo));
     }
 
     @PostMapping("/saveVoto")

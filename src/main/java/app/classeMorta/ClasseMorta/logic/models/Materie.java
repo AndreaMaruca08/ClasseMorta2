@@ -1,5 +1,6 @@
 package app.classeMorta.ClasseMorta.logic.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +26,7 @@ public class Materie {
     @JoinColumn(name = "id_studente", referencedColumnName = "id")
     private Studenti studente;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "materia", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Voti> voti = new ArrayList<>();
 

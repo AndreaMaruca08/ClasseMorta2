@@ -36,19 +36,16 @@ public class MediaController {
         log.trace("Attempt to get media per materia {} e studente {} with {} as voto ipotetico", mediaRequest.idMateria(), mediaRequest.idStudente(), mediaRequest.ipotetico());
 
         return mediaService.calcolaMediaPerMateria(mediaRequest)
-                == 0.0F
-                ? notFound("Nessuna media")
-                : success(mediaService.calcolaMediaPerMateria(mediaRequest));
+                == 0.0F ?
+                notFound("Nessuna media") : success(mediaService.calcolaMediaPerMateria(mediaRequest));
     }
 
     @PostMapping("/mediaAll")
-    public ResponseEntity<ConditionalResponseEntity<Object>> getMediaTot(@RequestBody Long idStudente) {
+    public ResponseEntity<ConditionalResponseEntity<Object>> getMediaTot(@RequestBody MediaRequest mediaRequest) {
         log.trace("Attempt to get media per materia");
-
-        return mediaService.calcolaMediaTot(idStudente, PeriodoVoto.ANNO)
-                == 0.0F
-                ? notFound("Nessuna media totale")
-                : success(mediaService.calcolaMediaTot(idStudente, PeriodoVoto.ANNO));
+        return mediaService.calcolaMediaTot(mediaRequest.idStudente(), mediaRequest.periodoVoto())
+                == 0.0F ?
+                notFound("Nessuna media totale") : success(mediaService.calcolaMediaTot(mediaRequest.idStudente(), PeriodoVoto.PENTAMESTRE));
     }
 
 }

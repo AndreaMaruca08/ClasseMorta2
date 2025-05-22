@@ -42,7 +42,7 @@ class MaterieControllerTest {
     void setup() {
         materieRepository.deleteAll();
         studentiRepository.deleteAll();
-        studente = new Studenti("test", "test", "test".toCharArray());
+        studente = new Studenti("test", "test", "test");
         studentiRepository.save(studente);
     }
 
@@ -75,7 +75,7 @@ class MaterieControllerTest {
     void testCreaMateria() throws Exception {
         final var request = new MateriaRequest();
         request.setNome("Storia");
-        request.setIdStudente(studente.getId());
+        request.setId(studente.getId());
 
         mockMvc.perform(post("/materie")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -97,7 +97,7 @@ class MaterieControllerTest {
 
         MateriaRequest request = new MateriaRequest();
         request.setNome("Matematica");
-        request.setIdStudente(studente.getId());
+        request.setId(studente.getId());
 
         mockMvc.perform(post("/materie")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -114,11 +114,11 @@ class MaterieControllerTest {
 
         MateriaRequest reqExists = new MateriaRequest();
         reqExists.setNome("Arte");
-        reqExists.setIdStudente(studente.getId());
+        reqExists.setId(studente.getId());
 
         MateriaRequest reqNonExists = new MateriaRequest();
         reqNonExists.setNome("Informatica");
-        reqNonExists.setIdStudente(studente.getId());
+        reqNonExists.setId(studente.getId());
 
         mockMvc.perform(post("/materie/exists")
                         .contentType(MediaType.APPLICATION_JSON)

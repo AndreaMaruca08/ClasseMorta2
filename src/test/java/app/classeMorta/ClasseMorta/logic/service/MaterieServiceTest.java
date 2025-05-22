@@ -33,7 +33,7 @@ public class MaterieServiceTest {
     //test di getAllMaterie
     @Test
     void testGetAllMaterieByStudente() {
-        Studenti studente = new Studenti("test", "test" , "test".toCharArray());
+        Studenti studente = new Studenti("test", "test" , "test");
         studentiRepository.save(studente);
         //creo due materia
         Materie materia = new Materie("info", studente);
@@ -52,7 +52,7 @@ public class MaterieServiceTest {
     //test per vedere se salva la materia
     @Test
     void testSaveMateria() {
-        Studenti studente = new Studenti("test", "test" , "test".toCharArray());
+        Studenti studente = new Studenti("test", "test" , "test");
         studentiRepository.save(studente);
         //creo una materia
         Materie materia = new Materie("info", studente);
@@ -66,7 +66,7 @@ public class MaterieServiceTest {
     //test per vedere se existsByName funziona
     @Test
     void testExistByName_giusto() {
-        Studenti studente = new Studenti("test", "test" , "test".toCharArray());
+        Studenti studente = new Studenti("test", "test" , "test");
         studentiRepository.save(studente);
         //creo una materia
         Materie materia = new Materie("info", studente);
@@ -77,7 +77,7 @@ public class MaterieServiceTest {
 
     @Test
     void testExistByName_sbagliato() {
-        Studenti studente = new Studenti("test", "test" , "test".toCharArray());
+        Studenti studente = new Studenti("test", "test" , "test");
         studentiRepository.save(studente);
         //creo una materia
         Materie materia = new Materie("info", studente);
@@ -89,7 +89,7 @@ public class MaterieServiceTest {
     //test per vedere se eliminaMateria funziona
     @Test
     void testCancellaMateria() {
-        Studenti studente = new Studenti("test", "test" , "test".toCharArray());
+        Studenti studente = new Studenti("test", "test" , "test");
         studentiRepository.save(studente);
         //creo una materia
         Materie materia = new Materie("info", studente);

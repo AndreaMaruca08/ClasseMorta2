@@ -12,11 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.DigestUtils;
 
-import java.nio.charset.StandardCharsets;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,7 +38,7 @@ public class StudentiControllerTest {
     //verifica id by email
     @Test
     void testGetIdByEmail() throws Exception {
-        Studenti studente = new Studenti("test", "test@gmail.com", "test".toCharArray());
+        Studenti studente = new Studenti("test", "test@gmail.com", "test");
         studentiRepository.save(studente);
 
         mockMvc.perform(get("/studenti/id-by-email")
@@ -68,9 +64,9 @@ public class StudentiControllerTest {
     //verifica delle credenziali
     @Test
     void testVerificaCredenziali() throws Exception {
-        var studente = new Studenti("test", "test@gmail.com", "test".toCharArray());
+        var studente = new Studenti("test", "test@gmail.com", "test");
         studentiRepository.save(studente);
-        var request = new LoginRequest("test@gmail.com", "test".toCharArray());
+        var request = new LoginRequest("test@gmail.com", "test");
 
         mockMvc.perform(post("/studenti/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -82,7 +78,7 @@ public class StudentiControllerTest {
 
     @Test
     void testVerificaCredenziali_error() throws Exception {
-        var request = new LoginRequest("test@gmail.com", "test".toCharArray());
+        var request = new LoginRequest("test@gmail.com", "test");
         mockMvc.perform(post("/studenti/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(request)))
@@ -94,7 +90,7 @@ public class StudentiControllerTest {
     //test per la email
     @Test
     void testIsEmailUsed() throws Exception{
-        var studente = new Studenti("test", "test@gmail.com", "test".toCharArray());
+        var studente = new Studenti("test", "test@gmail.com", "test");
         studentiRepository.save(studente);
 
         mockMvc.perform(get("/studenti/email-used")
@@ -124,7 +120,7 @@ public class StudentiControllerTest {
     //test per salvare studente
     @Test
     void testSalvaStudente()throws Exception {
-        var studente = new Studenti("test", "test@gmail.com", "test".toCharArray());
+        var studente = new Studenti("test", "test@gmail.com", "test");
 
         //System.out.println(new String(DigestUtils.md5Digest("andrea".getBytes(UTF_8)), UTF_8));
 
@@ -140,11 +136,11 @@ public class StudentiControllerTest {
 
     @Test
     void testSalvaStudente_error()throws Exception{
-        studentiRepository.save(new Studenti("test", "testSbagliato@gmail.com", "test".toCharArray()));
+        studentiRepository.save(new Studenti("test", "testSbagliato@gmail.com", "test"));
 
         mockMvc.perform(post("/studenti/saveStudente")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(new Studenti("test", "testSbagliato@gmail.com", "test".toCharArray())))
+                        .content(mapper.writeValueAsString(new Studenti("test", "testSbagliato@gmail.com", "test")))
                 )
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.successMessage").value(false))

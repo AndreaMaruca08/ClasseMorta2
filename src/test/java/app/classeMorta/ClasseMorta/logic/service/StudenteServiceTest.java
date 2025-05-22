@@ -30,7 +30,7 @@ public class StudenteServiceTest {
     @Test
     void testSalvaStudenteNelDatabase() {
         //creo studente provvisorio
-        studentiService.salvaStudente("Test", "test@gmail.com", "test".toCharArray());
+        studentiService.salvaStudente("Test", "test@gmail.com", "test");
         //prendo tutti gli studenti dal database
         List<Studenti> studenti = studentiRepository.findAll();
         //controllo che ci sia un solo utente(per essere sicuri che abbia effettivamente creato un utente)
@@ -45,11 +45,11 @@ public class StudenteServiceTest {
     @Test
     void testVerificaCredenziali_giuste() {
         //creazioni dello studente per il test
-        Studenti studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
+        Studenti studente = new Studenti("Test", "test@gmail.com", "test");
         //salvo in h2
         studentiRepository.save(studente);
         //guardo se le credenziali sono corrette
-        LoginRequest loginRequest = new LoginRequest("test@gmail.com", "test".toCharArray());
+        LoginRequest loginRequest = new LoginRequest("test@gmail.com", "test");
         boolean result = studentiService.verificaCredenziali(loginRequest);
         //controllo se ha dato true
         assertTrue(result);
@@ -58,10 +58,10 @@ public class StudenteServiceTest {
     @Test
     void testVerificaCredenziali_sbagliate() {
         //creazioni dello studente per il test
-        Studenti studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
+        Studenti studente = new Studenti("Test", "test@gmail.com", "test");
         //salvo in h2
         studentiRepository.save(studente);
-        LoginRequest loginRequest = new LoginRequest("test@gmail.com", "testSbagliato".toCharArray());
+        LoginRequest loginRequest = new LoginRequest("test@gmail.com", "testSbagliato");
         boolean result = studentiService.verificaCredenziali(loginRequest);
         //controllo se ha dato true
         assertFalse(result);
@@ -71,7 +71,7 @@ public class StudenteServiceTest {
     @Test
     void testIsEmailUsed() {
         //creazioni dello studente per il test
-        Studenti studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
+        Studenti studente = new Studenti("Test", "test@gmail.com", "test");
         studentiRepository.save(studente);
 
         boolean risposta = studentiService.isEmailUsed("test@gmail.com");
@@ -83,7 +83,7 @@ public class StudenteServiceTest {
     @Test
     void testIsEmailNotUsed() {
         //creazioni dello studente per il test
-        Studenti studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
+        Studenti studente = new Studenti("Test", "test@gmail.com", "test");
         studentiRepository.save(studente);
 
         boolean risposta = studentiService.isEmailUsed("test1@gmail.com");
@@ -96,7 +96,7 @@ public class StudenteServiceTest {
     @Test
     void testStudenteIdByEmail_giusto() {
         //creazioni dello studente per il test
-        Studenti studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
+        Studenti studente = new Studenti("Test", "test@gmail.com", "test");
         studentiRepository.save(studente);
         assertEquals(studente.getId(), studentiService.getStudentIdByEmail("test@gmail.com"));
 
@@ -105,7 +105,7 @@ public class StudenteServiceTest {
     @Test
     void testStudenteIdByEmail_Error() {
         //creazioni dello studente per il test
-        Studenti studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
+        Studenti studente = new Studenti("Test", "test@gmail.com", "test");
         studentiRepository.save(studente);
         assertNotEquals(studente.getId(), studentiService.getStudentIdByEmail("test1@gmail.com"));
 
@@ -115,7 +115,7 @@ public class StudenteServiceTest {
     @Test
     void testGetStudenteById() {
         //creazioni dello studente per il test
-        Studenti studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
+        Studenti studente = new Studenti("Test", "test@gmail.com", "test");
         studentiRepository.save(studente);
 
 

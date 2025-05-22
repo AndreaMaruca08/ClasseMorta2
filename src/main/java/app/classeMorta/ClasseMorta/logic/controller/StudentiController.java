@@ -10,9 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import static app.classeMorta.ClasseMorta.logic.dto.ConditionalResponseEntity.*;
 
+@CrossOrigin(origins = "http://localhost:63342")
 @Slf4j
 @RestController
 @RequestMapping("/studenti")

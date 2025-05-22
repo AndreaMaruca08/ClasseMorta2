@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 @Slf4j
@@ -29,7 +28,7 @@ public class StudentiService {
 
         if (studentiOpt.isPresent()) {
             Studenti utente = studentiOpt.get();
-            return Arrays.equals(utente.getPassword(), loginRequest.password()); // (NON SICURO)
+            return utente.getPassword().equals(loginRequest.password());
         }
 
         return false;
@@ -39,7 +38,7 @@ public class StudentiService {
         return studentiRepository.findByEmail(email).isPresent();
     }
 
-    public boolean salvaStudente(String nome, String email, char[] password) {
+    public boolean salvaStudente(String nome, String email, String password) {
         try {
             Studenti studente = new Studenti(nome, email, password);
             studentiRepository.save(studente);
@@ -58,6 +57,4 @@ public class StudentiService {
     public Optional<Studenti> getStudenteByEmail(String email) {
         return studentiRepository.findByEmail(email);
     }
-
-
 }

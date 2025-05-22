@@ -5,6 +5,7 @@ import app.classeMorta.ClasseMorta.logic.models.Materie;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
 import app.classeMorta.ClasseMorta.logic.models.Voti;
 import app.classeMorta.ClasseMorta.logic.repository.MaterieRepository;
+import app.classeMorta.ClasseMorta.logic.repository.StudentiRepository;
 import app.classeMorta.ClasseMorta.logic.repository.VotiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,13 @@ public class VotiService {
 
     private final VotiRepository votiRepository;
     private final MaterieRepository materieRepository;
+    private final StudentiRepository studentiRepository;
 
     @Autowired
-    public VotiService(VotiRepository votiRepository, MaterieRepository materieRepository) {
+    public VotiService(VotiRepository votiRepository, MaterieRepository materieRepository, StudentiRepository studentiRepository) {
         this.votiRepository = votiRepository;
         this.materieRepository = materieRepository;
+        this.studentiRepository = studentiRepository;
     }
 
     public List<Voti> getVotiPerMateriaEIDAndPeriodo(Long idMateria, Long idStudente, PeriodoVoto periodo) {
@@ -50,12 +53,12 @@ public class VotiService {
         return false; // se non esiste la materia
     }
 
-    public void importaVotiFromClasseViva(String phpCodice, Studenti studente){
-        new ImportaVotiFromSpaggiariService(materieRepository).importaVoti(phpCodice, studente);
+    public void importaVotiFromClasseViva(String phpCodice, Long idStudente){
+        new ImportaVotiFromSpaggiariService(materieRepository, studentiRepository).importaVoti(phpCodice, idStudente );
     }
 
     public String getCodiceSpaggiari(String codice, String password){
-        return new ImportaVotiFromSpaggiariService(materieRepository).ottieniPhpsessid(codice, password);
+        return new ImportaVotiFromSpaggiariService(materieRepository, studentiRepository).ottieniPhpsessid(codice, password);
     }
 
 }

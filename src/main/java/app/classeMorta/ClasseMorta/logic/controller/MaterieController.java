@@ -47,7 +47,7 @@ public class MaterieController {
     @PostMapping
     public ResponseEntity<ConditionalResponseEntity<Object>> creaMateria(@RequestBody MateriaRequest request) {
         log.trace("Attempt to create materia: {}", request.getNome());
-        Studenti studente = studentiService.getStudenteByID(request.getIdStudente());
+        Studenti studente = studentiService.getStudenteByID(request.getId());
         if (materieService.existByName(request.getNome(), studente)) {
             return failed("Materia già esistente");
         }
@@ -58,7 +58,7 @@ public class MaterieController {
     @PostMapping("/exists")
     public ResponseEntity<ConditionalResponseEntity<Object>> checkMateria(@RequestBody MateriaRequest request) {
         log.trace("Check if materia exists: {}", request.getNome());
-        Studenti studente = studentiService.getStudenteByID(request.getIdStudente());
+        Studenti studente = studentiService.getStudenteByID(request.getId());
         return success(materieService.existByName(request.getNome(), studente));
     }
 
@@ -71,13 +71,25 @@ public class MaterieController {
         return notFound("Materia non trovata");
     }
 
+    @GetMapping("/by-studente")
+    public ResponseEntity<ConditionalResponseEntity<Object>> getAllMaterieByStudente(@RequestParam Long idStudente) {
+        log.trace("Attempt to get all materie by studente");
+        Studenti studente = studentiService.getStudenteByID(idStudente);
+        List<Materie> materie = materieService.getAllMaterie(studente);
+        if (materie.isEmpty()) return notFound("Nessuna materia trovata");
+        List<MateriaRequest> output = materie.stream()
+                .map(MateriaRequest::from)
+                .toList();
+        return success(output);
+    }
+
     @Setter
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
     public static class MateriaRequest {
         private String nome;
-        private Long idStudente;
+        private Long id;
         public static MateriaRequest from(Materie m) {
             return new MateriaRequest(m.getNomeMateria(), m.getIdMateria());
         }

@@ -5,6 +5,8 @@ import app.classeMorta.ClasseMorta.logic.models.Materie;
 import app.classeMorta.ClasseMorta.logic.models.Studenti;
 import app.classeMorta.ClasseMorta.logic.models.Voti;
 import app.classeMorta.ClasseMorta.logic.repository.MaterieRepository;
+import app.classeMorta.ClasseMorta.logic.repository.StudentiRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,14 @@ import java.util.List;
 public class ImportaVotiFromSpaggiariService {
 
     private final MaterieRepository materieRepository;
+    private final StudentiRepository studentiRepository;
 
-    public List<Voti> importaVoti(String phpsessid, Studenti studente) {
+    public List<Voti> importaVoti(String phpsessid, Long studenteID) {
+
+        Studenti studente = studentiRepository.findById(studenteID)
+                .orElseThrow(() -> new EntityNotFoundException("Studente non trovato"));
+
+
         WebClient webClient = WebClient.builder()
                 .baseUrl("https://web.spaggiari.eu")
                 .defaultHeader("Cookie", "PHPSESSID=" + phpsessid)

@@ -39,7 +39,7 @@ public class VotiServiceTest {
     void testGetVotiPerMateriaEID() {
 
         //creazione di uno studente, materia e voto provvisorio
-        var studente = new Studenti("Test", "test@gmail.com", "test".toCharArray());
+        var studente = new Studenti("Test", "test@gmail.com", "test");
         studentiRepository.save(studente);
 
         var materia = new Materie("info", studente);

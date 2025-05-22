@@ -1,6 +1,7 @@
 package app.classeMorta.ClasseMorta.logic.models;
 
 import app.classeMorta.ClasseMorta.logic.PeriodoVoto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +24,7 @@ public class Voti {
     private Studenti studente;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "idMateria", nullable = false)
     private Materie materia;
 
