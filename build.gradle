@@ -54,7 +54,7 @@ tasks.withType(JavaExec).configureEach {
 // === Sezione fondamentale per JAR eseguibile ===
 
 springBoot {
-    mainClass = "app.classeMorta.ClasseMorta.GUI.UIApplication"
+    mainClass = "app.classeMorta.ClasseMorta.UI.UIApplication"
 }
 
 bootJar {
@@ -66,5 +66,5 @@ bootJar {
 
 // Se vuoi lanciare localmente con run:
 bootRun {
-    mainClass.set('app.classeMorta.ClasseMorta.GUI.UIApplication')
+    mainClass.set('app.classeMorta.ClasseMorta.UI.UIApplication')
 }

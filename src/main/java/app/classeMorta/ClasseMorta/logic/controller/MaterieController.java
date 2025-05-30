@@ -35,8 +35,10 @@ public class MaterieController {
     @GetMapping
     public ResponseEntity<ConditionalResponseEntity<Object>> getAllMaterie(@RequestParam Long idStudente) {
         log.trace("Attempt to get all materie");
+        System.out.println(idStudente);
         Studenti studente = studentiService.getStudenteByID(idStudente);
-        List<Materie> materie = materieService.getAllMaterie(studente);
+                List<Materie> materie = materieService.getAllMaterie(studente);
+        System.out.println(materie);
         if (materie.isEmpty()) return notFound("Nessuna materia trovata");
         List<MateriaRequest> output = materie.stream()
                 .map(MateriaRequest::from)

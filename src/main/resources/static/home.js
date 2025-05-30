@@ -2,9 +2,8 @@ const API_BASE = "http://localhost:8080";
 
 // Ottieni idStudente da sessionStorage (o default 15)
 function getStudenteId() {
-    return sessionStorage.getItem("idStudente") || 15;
+    return sessionStorage.getItem("idStudente") || 6;
 }
-
 /**
  * Funzione per ottenere il PHPSESSID via POST
  */

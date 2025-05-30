@@ -1,4 +1,4 @@
-package app.classeMorta.ClasseMorta.GUI;
+package app.classeMorta.ClasseMorta.UI;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;

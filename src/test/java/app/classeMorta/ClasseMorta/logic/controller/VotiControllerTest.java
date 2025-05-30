@@ -39,6 +39,7 @@ public class VotiControllerTest {
     private final StudentiRepository studentiRepository;
     private final ObjectMapper mapper;
 
+    //DEPENDENCY INJECTION
     @Autowired
     public VotiControllerTest(MockMvc mockMvc,
                               VotiRepository votiRepository,
@@ -74,11 +75,12 @@ public class VotiControllerTest {
         votiRepository.save(voto);
 
         mockMvc.perform(get("/voti/VotiPerMateria")
-                        .param("idMateria", materia.getIdMateria().toString())
-                        .param("idStudente", studente.getId().toString())
-                        .param("periodo", PeriodoVoto.PENTAMESTRE.toString())
+                        .param("idMateria", materia.getIdMateria().toString()) // )
+                        .param("idStudente", studente.getId().toString())      // } passaggio dei parametri
+                        .param("periodo", PeriodoVoto.PENTAMESTRE.toString())  // )
                         .accept(MediaType.APPLICATION_JSON)
                 )
+                //Si aspetta che la risposta sia 200 e che il messaggio sia "successMessage": true
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.successMessage").value(true))
                 .andExpect(jsonPath("$.message[0].voto").value(7.5F)); //controllo il primo della lista

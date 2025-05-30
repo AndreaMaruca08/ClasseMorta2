@@ -1,4 +1,4 @@
-package app.classeMorta.ClasseMorta.GUI;
+package app.classeMorta.ClasseMorta.UI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,7 +87,7 @@ public class GUIUtils {
     /**
      * <b>Funzioni che con una percentuale di schermo restituiscono il suo valore in pixel in base alla
      * risoluzione attuale, questo serve in modo che in tutti i dispositivi, indipendentemente dalla
-     * risoluzione, si ottenga una giusta posizione dei componenti GUI </b>
+     * risoluzione, si ottenga una giusta posizione dei componenti UI </b>
      *
      * @param percSchermo percentuale di schermo in pixel che si vuole ottenere
      * @return restituisce un <code>int</code>il valore in pixel

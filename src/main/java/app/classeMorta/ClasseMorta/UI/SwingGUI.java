@@ -1,4 +1,4 @@
-package app.classeMorta.ClasseMorta.GUI;
+package app.classeMorta.ClasseMorta.UI;
 
 import app.classeMorta.ClasseMorta.logic.dto.LoginRequest;
 import app.classeMorta.ClasseMorta.logic.dto.MediaRequest;
@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static app.classeMorta.ClasseMorta.GUI.GUIUtils.*;
+import static app.classeMorta.ClasseMorta.UI.GUIUtils.*;
 /**
- * La classe {@code SwingGUI} si occupa della creazione e gestione dell'interfaccia grafica (GUI)
+ * La classe {@code SwingGUI} si occupa della creazione e gestione dell'interfaccia grafica (UI)
  * per un'applicazione di gestione studenti utilizzando Swing.
  * <p>
  * Responsabilità principali:
@@ -64,7 +64,7 @@ public class SwingGUI {
 
     @PostConstruct
     public void createGUI() {
-        // Esegue la creazione della GUI in modo thread-safe
+        // Esegue la creazione della UI in modo thread-safe
         SwingUtilities.invokeLater(() -> {
             // Carica l'icona dell'applicazione
             URL imageUrl = getClass().getResource("/img.png");
@@ -100,7 +100,7 @@ public class SwingGUI {
             int screenHeight = screenSize.height;
 
             // Crea e configura il frame principale
-            JFrame frame = new JFrame("Classe Morta2");
+            JFrame frame = new JFrame("Classe Morta");
             frame.setIconImage(image);
             frame.setSize(screenWidth, screenHeight);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -134,7 +134,7 @@ public class SwingGUI {
         creaPanel.setBackground(coloreSecondario);
 
         // Aggiunge le etichette
-        creaPanel.add(creaLabel("Benvenuto su ClasseMorta2", 30, 15, 40, 5, 30, coloreTesto));
+        creaPanel.add(creaLabel("Benvenuto su ClasseMorta", 30, 15, 40, 5, 30, coloreTesto));
         creaPanel.add(creaLabel("Nome", 30, 25, 10, 5, 18, coloreTesto));
         creaPanel.add(creaLabel("Email : ", 30, 30, 10, 5, 18, coloreTesto));
         creaPanel.add(creaLabel("Password : ", 30, 35, 10, 5, 18, coloreTesto));
@@ -189,7 +189,7 @@ public class SwingGUI {
         accediPanel.setBackground(coloreSecondario);
 
         // Aggiunge le etichette
-        accediPanel.add(creaLabel("Bentornato su ClasseMorta2", 30, 15, 40, 5, 30, coloreTesto));
+        accediPanel.add(creaLabel("Bentornato su ClasseMorta", 30, 15, 40, 5, 30, coloreTesto));
         accediPanel.add(creaLabel("email : ", 30, 25, 10, 5, 18, coloreTesto));
         accediPanel.add(creaLabel("password : ", 30, 30, 10, 5, 18, coloreTesto));
 

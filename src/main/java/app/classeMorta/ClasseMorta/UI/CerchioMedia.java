@@ -1,4 +1,4 @@
-package app.classeMorta.ClasseMorta.GUI;
+package app.classeMorta.ClasseMorta.UI;
 
 import javax.swing.*;
 import java.awt.*;

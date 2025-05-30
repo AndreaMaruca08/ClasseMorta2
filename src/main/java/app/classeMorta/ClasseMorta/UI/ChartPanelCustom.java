@@ -1,4 +1,4 @@
-package app.classeMorta.ClasseMorta.GUI;
+package app.classeMorta.ClasseMorta.UI;
 
 import app.classeMorta.ClasseMorta.logic.models.Voti;
 import org.jfree.chart.ChartFactory;
