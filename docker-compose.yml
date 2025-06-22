@@ -28,7 +28,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
     ports:
-      - "8080:8080" # Rende disponibile il servizio sulla tua macchina host
+      - "8080:8080"
     restart: unless-stopped
     networks:
       - roar_net

@@ -35,5 +35,5 @@ COPY --from=builder /app/build/libs/ClasseMorta.jar app.jar
 # Esporta la porta su cui gira il servizio
 EXPOSE 8080
 
-# Comando per avviare l'applicazione
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# Esegui l'applicazione con il profilo docker
+ENTRYPOINT ["java", "-jar", "/app/app.jar", "--spring.profiles.active=docker"]

@@ -11,10 +11,14 @@ import java.awt.*;
 public class UIApplication {
 
     public static void main(String[] args) {
-        Toolkit.getDefaultToolkit();
+        // Controlla il profilo attivo
+        String activeProfile = System.getProperty("spring.profiles.active", "default");
+
+        // Avvia Swing solo se nel profilo 'ui'
+        if ("ui".equals(activeProfile)) {
+            Toolkit.getDefaultToolkit();
+        }
+
         SpringApplication.run(UIApplication.class, args);
     }
-
 }
-
-
