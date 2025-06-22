@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static app.classeMorta.ClasseMorta.UI.GUIUtils.*;
-/**
+ /**
  * La classe {@code SwingGUI} si occupa della creazione e gestione dell'interfaccia grafica (UI)
  * per un'applicazione di gestione studenti utilizzando Swing.
  * <p>

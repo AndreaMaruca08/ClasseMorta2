@@ -17,6 +17,22 @@ services:
     networks:
       - roar_net
 
+  springboot-app:
+    image: classemorta-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: springboot-app
+    depends_on:
+      - mysql
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080" # Rende disponibile il servizio sulla tua macchina host
+    restart: unless-stopped
+    networks:
+      - roar_net
+
 volumes:
   mysql_data:
 
