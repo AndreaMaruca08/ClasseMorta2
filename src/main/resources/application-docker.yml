@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://mysql:3306/ClasseMortaDB}
-    username: ${SPRING_DATASOURCE_USERNAME:nuova_utente}
-    password: ${SPRING_DATASOURCE_PASSWORD:nuova_password}
+    url: jdbc:mysql://mysql:3306/ClasseMortaDB
+    username: nuova_utente
+    password: nuova_password
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
