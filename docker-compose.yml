@@ -11,11 +11,11 @@ services:
       MYSQL_PASSWORD: nuova_password
       MYSQL_ROOT_PASSWORD: nuova_password
     ports:
-      - "3307:3306"
+      - "3307:3306"  # Porta esposta solo locale
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql  # Persistenza database
     networks:
-      - roar_net
+      - roar_net    # Conferma che entrambi i servizi sono sulla stessa rete
 
   springboot-app:
     image: classemorta-app:latest
@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: springboot-app
-    depends_on:
+    depends_on:   # Assicura che MySQL parta prima
       - mysql
     environment:
       SPRING_PROFILES_ACTIVE: docker
@@ -37,4 +37,4 @@ volumes:
   mysql_data:
 
 networks:
-  roar_net:
+  roar_net:    # Definizione della rete condivisa
