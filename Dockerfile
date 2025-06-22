@@ -36,4 +36,4 @@ COPY --from=builder /app/build/libs/ClasseMorta.jar app.jar
 EXPOSE 8080
 
 # Esegui l'applicazione con il profilo docker
-ENTRYPOINT ["java", "-jar", "/app/app.jar", "--spring.profiles.active=docker"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=docker", "-jar", "/app/app.jar"]

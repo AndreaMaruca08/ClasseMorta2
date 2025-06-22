@@ -64,6 +64,12 @@ public class SwingGUI {
 
     @PostConstruct
     public void createGUI() {
+        String activeProfile = System.getProperty("spring.profiles.active");
+        if ("docker".equals(activeProfile) || GraphicsEnvironment.isHeadless()) {
+            log.warn("Ambiente grafico non supportato (esecuzione in modalità headless o Docker): GUI disattivata.");
+            return;
+        }
+
         // Esegue la creazione della UI in modo thread-safe
         SwingUtilities.invokeLater(() -> {
             // Carica l'icona dell'applicazione
