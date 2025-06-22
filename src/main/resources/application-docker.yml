@@ -1,4 +1,13 @@
 spring:
   profiles: docker
-  application:
-    name: ApplicazioneDocker
+  datasource:
+    url: jdbc:mysql://mysql:3306/ClasseMortaDB
+    username: nuova_utente
+    password: nuova_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+server:
+  port: 8080
