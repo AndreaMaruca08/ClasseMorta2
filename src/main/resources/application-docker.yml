@@ -18,8 +18,11 @@ spring:
     level:
       root: DEBUG
       org.springframework: DEBUG
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: health
+      endpoint:
+        health:
+          show-details: always
