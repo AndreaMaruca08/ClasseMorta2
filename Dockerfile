@@ -1,33 +1,32 @@
-# Fase 1: Build del progetto Java
-FROM eclipse-temurin:23-jdk-alpine as builder
+# Usa Java 21 su architettura amd64
+FROM --platform=linux/amd64 eclipse-temurin:21-jdk-alpine as builder
 
-# Imposta la directory di lavoro per la fase di build
 WORKDIR /app
 
-# Copia i file necessari per il build
-COPY gradlew .
-COPY gradle gradle
-RUN chmod +x gradlew
-COPY build.gradle settings.gradle ./
-RUN ./gradlew dependencies --no-daemon
+# Scarica e configura Gradle
+ARG GRADLE_VERSION=8.4
+RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip && \
+    unzip gradle-${GRADLE_VERSION}-bin.zip -d /opt && \
+    rm gradle-${GRADLE_VERSION}-bin.zip && \
+    ln -s /opt/gradle-${GRADLE_VERSION}/bin/gradle /usr/bin/gradle
+
+# Copia il progetto e compila
 COPY . .
-RUN ./gradlew bootJar --no-daemon
 
-# Fase 2: Creazione dell'immagine finale e deploy
-FROM eclipse-temurin:23-jdk-alpine
+# Esegui la build senza specificare esplicitamente org.gradle.java.home
+RUN gradle dependencies --no-daemon && gradle bootJar --no-daemon && ls -l /app/build/libs/
+# Usa il runtime Java 21 per eseguire l'applicazione
+FROM --platform=linux/amd64 eclipse-temurin:21-jdk-alpine
 
-# Imposta la directory di lavoro per l'immagine finale
 WORKDIR /app
-
-RUN apk add --no-cache netcat-openbsd
-
-# Copia il file JAR generato dalla build
 COPY --from=builder /app/build/libs/ClasseMorta.jar app.jar
 
-# Copia lo script di attesa nel container
-COPY wait-for-mysql.sh /wait-for-mysql.sh
-RUN chmod +x /wait-for-mysql.sh
+# Aggiungi wait-for.sh per PostgreSQL
+ADD https://raw.githubusercontent.com/eficode/wait-for/master/wait-for /wait-for.sh
+RUN chmod +x /wait-for.sh
 
+# Espone la porta 8080
 EXPOSE 8080
 
-ENTRYPOINT ["/bin/sh", "/wait-for-mysql.sh", "mysql", "3306", "java", "-Dspring.profiles.active=docker", "-jar", "/app/app.jar"]
+# Esegui il container con wait-for e un profilo Docker
+ENTRYPOINT ["/bin/sh", "/wait-for.sh", "postgres:5432", "--", "java", "--enable-preview", "-Dspring.profiles.active=docker", "-jar", "/app/app.jar"]

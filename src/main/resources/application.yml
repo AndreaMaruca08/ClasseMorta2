@@ -1,11 +1,12 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/ClasseMortaDB
+    url: jdbc:postgresql://localhost:5432/ClasseMortaDB
     username: nuova_utente
     password: nuova_password
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect

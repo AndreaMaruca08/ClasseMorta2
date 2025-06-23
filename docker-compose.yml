@@ -1,21 +1,18 @@
-version: '3.8'
-
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
-    restart: "no"
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    restart: "always"
     environment:
-      MYSQL_DATABASE: ClasseMortaDB
-      MYSQL_USER: nuova_utente
-      MYSQL_PASSWORD: nuova_password
-      MYSQL_ROOT_PASSWORD: nuova_password
+      POSTGRES_DB: ClasseMortaDB
+      POSTGRES_USER: nuova_utente
+      POSTGRES_PASSWORD: nuova_password
     ports:
-      - "3307:3306"  # Porta esposta solo locale
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql  # Persistenza database
+      - postgres_data:/var/lib/postgresql/data
     networks:
-      - roar_net    # Conferma che entrambi i servizi sono sulla stessa rete
+      - roar_net
 
   springboot-app:
     image: classemorta-app:latest
@@ -23,8 +20,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: springboot-app
-    depends_on:   # Assicura che MySQL parta prima
-      - mysql
+    depends_on:
+      - postgres
     environment:
       SPRING_PROFILES_ACTIVE: docker
     ports:
@@ -34,7 +31,7 @@ services:
       - roar_net
 
 volumes:
-  mysql_data:
+  postgres_data:
 
 networks:
-  roar_net:    # Definizione della rete condivisa
+  roar_net:

@@ -1,15 +1,10 @@
 spring:
-  config:
-    activate:
-      on-profile: docker
   datasource:
-    url: jdbc:mysql://mysql:3306/ClasseMortaDB
+    url: jdbc:postgresql://postgres:5432/ClasseMortaDB
     username: nuova_utente
     password: nuova_password
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-    database-platform: org.hibernate.dialect.MySQLDialect
-server:
-  port: 8080
+    database-platform: org.hibernate.dialect.PostgreSQLDialect

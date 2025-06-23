@@ -1,70 +1,70 @@
 plugins {
-    id 'org.springframework.boot' version '3.2.5'
-    id 'io.spring.dependency-management' version '1.1.4'
     id 'java'
+    id 'org.springframework.boot' version '3.1.6' // Verifica che questa versione sia quella desiderata
+    id 'io.spring.dependency-management' version '1.1.3'
 }
-
-group = 'app.classeMorta'
-version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(23)
+        languageVersion = JavaLanguageVersion.of(21) // Usa Java 21
     }
 }
+
+group = 'app.classeMorta'
+version = '1.0.0'
+sourceCompatibility = '21' // Java 21
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Dipendenze Spring principali
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.jsoup:jsoup:1.17.2'
-    implementation "io.netty:netty-resolver-dns-native-macos:4.1.110.Final:osx-aarch_64"
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    testImplementation 'com.h2database:h2:2.2.220'
 
-    compileOnly 'org.projectlombok:lombok:1.18.32'
-    annotationProcessor 'org.projectlombok:lombok:1.18.32'
-    testCompileOnly 'org.projectlombok:lombok:1.18.32'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
-
-    testImplementation 'com.h2database:h2'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testImplementation 'org.mockito:mockito-core:5.12.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-
-    //per grafici
+    // JFreeChart per grafici
     implementation 'org.jfree:jfreechart:1.5.4'
+
+    // Jsoup HTML Parser
+    implementation 'org.jsoup:jsoup:1.16.1' // Includi la versione corretta di Jsoup
+
+    // Lombok per ridurre il boilerplate
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Aggiungi Lombok anche per i test
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // Driver PostgreSQL
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Librerie per test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ["--enable-preview"]
 }
 
 tasks.withType(Test) {
-    useJUnitPlatform()
-    jvmArgs += "--enable-native-access=ALL-UNNAMED"
+    jvmArgs += ["--enable-preview"]
 }
 
-tasks.withType(JavaExec).configureEach {
-    jvmArgs += "--enable-native-access=ALL-UNNAMED"
+tasks.withType(JavaExec) {
+    jvmArgs += ["--enable-preview"]
 }
 
-// === Sezione fondamentale per JAR eseguibile ===
-
-springBoot {
-    mainClass = "app.classeMorta.ClasseMorta.UI.UIApplication"
-}
-
+// Configura la classe principale del JAR
 bootJar {
-    archiveFileName = 'ClasseMorta.jar'
-    launchScript()  // Utile su Unix/Mac per doppio click, crea script di avvio
+    mainClass.set("app.classeMorta.ClasseMorta.logic.WebApplication") // Oppure UIApplication in base alle tue esigenze
 }
-
-// NON servono manifest custom o archiveBaseName: il task bootJar fa tutto
-
-// Se vuoi lanciare localmente con run:
-bootRun {
-    mainClass.set('app.classeMorta.ClasseMorta.UI.UIApplication')
+bootJar {
+    archiveBaseName.set("ClasseMorta")
+    archiveVersion.set("") // Rimuove la versione dal nome del file
+    archiveClassifier.set("") // Evita di aggiungere classificatori
 }
