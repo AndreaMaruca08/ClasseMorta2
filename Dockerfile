@@ -40,4 +40,4 @@ RUN chmod +x /wait-for-it.sh
 EXPOSE 8080
 
 # Esegui lo script wait-for-it.sh per attendere MySQL, quindi avvia Spring Boot
-ENTRYPOINT ["/wait-for-it.sh", "mysql:3306", "--", "java", "-Dspring.profiles.active=docker", "-jar", "/app/app.jar"]
+ENTRYPOINT ["/bin/sh", "/wait-for-mysql.sh", "mysql", "3306", "java", "-Dspring.profiles.active=docker", "-jar", "/app/app.jar"]
