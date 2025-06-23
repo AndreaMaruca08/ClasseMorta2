@@ -4,7 +4,22 @@ spring:
     username: nuova_utente
     password: nuova_password
     driver-class-name: org.postgresql.Driver
+    hikari:
+      # Aumenta il timeout per la connessione al database
+      connection-timeout: 200000
+      # Configura il pool di connessioni secondo necessità
+      maximum-pool-size: 10
+      minimum-idle: 2
   jpa:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  logging:
+    level:
+      root: DEBUG
+      org.springframework: DEBUG
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
