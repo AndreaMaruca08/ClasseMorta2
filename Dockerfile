@@ -32,12 +32,12 @@ WORKDIR /app
 # Copia il file JAR generato dalla fase di build nell'immagine finale
 COPY --from=builder /app/build/libs/ClasseMorta.jar app.jar
 
-# Copia lo script wait-for-it.sh nel container
-COPY wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh
+# Copia lo script wait-for-mysql.sh nel container
+COPY wait-for-mysql.sh /wait-for-it.sh
+RUN chmod +x /wait-for-mysql.sh
 
 # Esporta la porta su cui gira il servizio
 EXPOSE 8080
 
-# Esegui lo script wait-for-it.sh per attendere MySQL, quindi avvia Spring Boot
+# Esegui lo script wait-for-mysql.sh per attendere MySQL, quindi avvia Spring Boot
 ENTRYPOINT ["/bin/sh", "/wait-for-mysql.sh", "mysql", "3306", "java", "-Dspring.profiles.active=docker", "-jar", "/app/app.jar"]
